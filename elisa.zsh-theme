@@ -1,6 +1,6 @@
 # Elisa Oh-my-zsh! theme
 # Designed by Patrick Lambein
-# Inspired by Steve Losh's .zshrc 
+# Inspired by Steve Losh's .zshrc
 # (http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/)
 # and by the Nethack Zsh Prompt
 # (http://eseth.org/2009/nethack-term.html)
@@ -36,7 +36,7 @@ function collapse_pwd {
 }
 
 function setprompt() {
-local -a infoline llines rlines 
+local -a infoline llines rlines
 local i_width i_filler filler
 
 infoline+="╭─"
@@ -55,10 +55,10 @@ i_filler=$(($COLUMNS - $i_width + 5))
 
 filler="${gray}${(l:${i_filler}::─:)}${reset}"
 [[ -n $SSH_CLIENT ]] && infoline[6]=( "${infoline[6]}${filler}" )\
-	|| infoline[5]=( "${infoline[5]}${filler}" )  
+	|| infoline[5]=( "${infoline[5]}${filler}" )
 
 llines+=( ${(j::)infoline} )
-llines+=( "╰─($(prompt_char) %(!.#.$) ")
+llines+=( "╰─($(prompt_char)%(1j. %j.) %(!.#.$) ")
 rlines+=("$(git_prompt_info)")
 
 PROMPT=${(F)llines}
