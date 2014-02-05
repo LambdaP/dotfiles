@@ -10,9 +10,11 @@ end
 
 function _bat_charge -d "Displays the current battery levels."
   set -l script "$HOME/.oh-my-fish/themes/eris/utils.py" 2>/dev/null
-  set -l color (eval $script "color")
+  set -l color
 
-  switch $color
+  switch (eval $script "color")
+    case white
+      set outc (set_color -o white)
     case red
       set outc (set_color -o red)
     case yellow

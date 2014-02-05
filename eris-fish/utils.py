@@ -6,7 +6,7 @@ import sys, math, subprocess
 if sys.argv[1] == "line":
     l = int(sys.argv[2]) - int(sys.argv[3]) - 10 - 5
     sys.stdout.write("─" * l)
-else:
+elif sys.platform == "darwin":
     p = subprocess.Popen(["ioreg", "-rc", "AppleSmartBattery"], stdout=subprocess.PIPE)
     output = p.communicate()[0]
 
@@ -35,3 +35,8 @@ else:
             sys.stdout.write("yellow")
         else:
             sys.stdout.write("green")
+else:
+    if sys.argv[1] == "draw":
+        sys.stdout.write("──────────")
+    elif sys.argv[1] == "color":
+        sys.stdout.write("white")
