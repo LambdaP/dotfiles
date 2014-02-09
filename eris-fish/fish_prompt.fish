@@ -1,5 +1,3 @@
-set fish_greeting (command ddate)
-
 function _git_branch_name
   echo (command git symbolic-ref HEAD ^/dev/null | sed -e 's|^refs/heads/||')
 end
@@ -74,6 +72,9 @@ function _arrow
   if [ (_git_branch_name) ]
     set git_char "± "
   else
+    if not set -q $_eris
+      eris regular
+    end
     if test $_eris = regular
       set git_char "○ "
     end
@@ -99,6 +100,9 @@ function _first_line -d "Displays the first line of the prompt."
   set -l host (_host)
   set -l who "$host in $cwd"
 
+  if not set -q $_eris
+    eris regular
+  end
   switch $_eris
     case regular
       set -l line (_line $who)
@@ -115,6 +119,9 @@ function fish_prompt
 
   _first_line
 
+  if not set -q $_eris
+    eris regular
+  end
   if test $_eris = regular
     set -l arrow (_arrow)
     echo "$white╰─($arrow"
@@ -127,6 +134,9 @@ function fish_right_prompt
   set -l green   (set_color -o green)
   set -l normal  (set_color normal)
 
+  if not set -q $_eris
+    eris regular
+  end
   if [ (_git_branch_name) ]
     if [ (_is_git_dirty) ]
       set dirty $green"!"$normal
@@ -147,3 +157,5 @@ function fish_right_prompt
     end
   end
 end
+
+set fish_greeting (command ddate)
