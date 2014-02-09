@@ -69,17 +69,23 @@ function _job_char -d "Display the number of background and stopped jobs."
 end
 
 function _arrow
+  set -l red   (set_color -o red)
+  set -l white (set_color -o white)
   if [ (_git_branch_name) ]
     set git_char "± "
+  else if [ (eris) = regular ]
+    set git_char "○ "
+  end
+
+  if test $RETVAL -ne 0
+    set ret_char $red$git_char$white
   else
-    if [ (eris) = regular ]
-      set git_char "○ "
-    end
+    set ret_char $git_char
   end
 
   set -l job_char (_job_char)
 
-  echo "$git_char$job_char\$ "
+  echo "$ret_char$job_char\$ "
 end
 
 function _first_line -d "Displays the first line of the prompt."
@@ -109,6 +115,7 @@ function _first_line -d "Displays the first line of the prompt."
 end
 
 function fish_prompt
+  set -g RETVAL $status
   set -l white (set_color white)
 
   if test -z (eris)
