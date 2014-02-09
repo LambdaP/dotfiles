@@ -35,13 +35,12 @@ function _line -d "Fills the screen with a horizontal line."
 end
 
 function eris -d "Changes prompt mode. Current modes: regular, light."
-  if test -n $argv
-    switch $argv
-      case light
-        set -U _eris light
-      case regular
-        set -U _eris regular
-    end
+  if test "$argv" = "light"
+    set -U _eris light
+  else if test "$argv" = "regular"
+    set -U _eris regular
+  else
+    echo "$_eris"
   end
 end
 
@@ -73,10 +72,7 @@ function _arrow
   if [ (_git_branch_name) ]
     set git_char "± "
   else
-    if not set -q $_eris
-      eris regular
-    end
-    if test $_eris = regular
+    if test (eris) = regular
       set git_char "○ "
     end
   end
@@ -101,10 +97,7 @@ function _first_line -d "Displays the first line of the prompt."
   set -l host (_host)
   set -l who "$host in $cwd"
 
-  if not set -q $_eris
-    eris regular
-  end
-  switch $_eris
+  switch (eris)
     case regular
       set -l line (_line $who)
       set -l battery (_bat_charge)
@@ -118,12 +111,13 @@ end
 function fish_prompt
   set -l white (set_color white)
 
-  _first_line
-
-  if not set -q $_eris
+  if test -z (eris)
     eris regular
   end
-  if test $_eris = regular
+
+  _first_line
+
+  if test (eris) = regular
     set -l arrow (_arrow)
     echo "$white╰─($arrow"
   end
@@ -135,9 +129,6 @@ function fish_right_prompt
   set -l green   (set_color -o green)
   set -l normal  (set_color normal)
 
-  if not set -q $_eris
-    eris regular
-  end
   if [ (_git_branch_name) ]
     if [ (_is_git_dirty) ]
       set dirty $green"!"$normal
@@ -146,14 +137,14 @@ function fish_right_prompt
     set git_branch $magenta(_git_branch_name)
     set git_info '['$git_branch$dirty']'
 
-    switch $_eris
+    switch (eris)
       case regular
         echo "$white○─$git_info─╯ "
       case light
         echo $white$git_info
     end
   else
-    if test $_eris = regular
+    if test (eris) = regular
       echo $white "○──╯ "
     end
   end
