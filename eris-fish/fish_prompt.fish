@@ -35,9 +35,9 @@ function _line -d "Fills the screen with a horizontal line."
 end
 
 function eris -d "Changes prompt mode. Current modes: regular, light."
-  if test "$argv" = "light"
+  if [ "$argv" = "light" ]
     set -U _eris light
-  else if test "$argv" = "regular"
+  else if [ "$argv" = "regular" ]
     set -U _eris regular
   else
     echo "$_eris"
@@ -62,7 +62,7 @@ end
 function _job_char -d "Display the number of background and stopped jobs."
   set -l njobs (jobs | wc -l)
 
-  if test $njobs -ne 0
+  if [ $njobs -ne 0 ]
     set -l jobchar (echo $njobs | sed 's/ //g')
     echo "$jobchar "
   end
@@ -72,7 +72,7 @@ function _arrow
   if [ (_git_branch_name) ]
     set git_char "± "
   else
-    if test (eris) = regular
+    if [ (eris) = regular ]
       set git_char "○ "
     end
   end
@@ -117,7 +117,7 @@ function fish_prompt
 
   _first_line
 
-  if test (eris) = regular
+  if [ (eris) = regular ]
     set -l arrow (_arrow)
     echo "$white╰─($arrow"
   end
@@ -144,7 +144,7 @@ function fish_right_prompt
         echo $white$git_info
     end
   else
-    if test (eris) = regular
+    if [ (eris) = regular ]
       echo $white "○──╯ "
     end
   end
