@@ -4,7 +4,7 @@
 import sys, math, subprocess
 
 if sys.argv[1] == "line":
-    l = int(sys.argv[2]) - int(sys.argv[3]) - 10 - 5
+    l = int(sys.argv[2]) - int(sys.argv[3]) - 10 - 6
     sys.stdout.write("─" * l)
 else:
     if sys.platform == "darwin":

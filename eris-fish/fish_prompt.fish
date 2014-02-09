@@ -28,13 +28,14 @@ end
 function _line -d "Fills the screen with a horizontal line."
   set -l script "$HOME/.oh-my-fish/themes/eris/utils.py" 2>/dev/null
 
-  set -l npre (echo $argv | tr -cd '[:print:]' | sed -E 's/\[[0-9]+m|\(B\[m//g' | wc -m)
+  set -l stripped (echo $argv | tr -cd '[:print:]' | sed -E 's/\[[0-9]+m|\(B\[m//g')
+  set -l npre (echo -n $stripped | wc -m)
 
   eval $script line $COLUMNS $npre
 end
 
 function eris -d "Changes prompt mode. Current modes: regular, light."
-  if test $argv
+  if test -n $argv
     switch $argv
       case light
         set -U _eris light
