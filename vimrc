@@ -20,7 +20,7 @@ set nocompatible
 " Pathogen ------------------------------------------------------------ {{{
 call pathogen#infect()
 call pathogen#helptags()
-call pathogen#runtime_append_all_bundles()
+call pathogen#incubate()
 " " }}}
 
 " Basic options ------------------------------------------------------- {{{
@@ -157,6 +157,9 @@ nnoremap <leader>v <C-w>v<C-w>l
 "Moves around split windows
 nnoremap <leader>w <C-w><C-w>
 
+"Moves around tabs
+nnoremap <leader>t <Esc>:tabnew<CR>
+
 "Delete Blanklines
 nnoremap <leader>S :v/\S/d<CR>
 
@@ -165,6 +168,10 @@ nnoremap <leader>D :g/^/put_<CR>
 
 "Real Returns
 nnoremap <leader>R :%s/\r/\r/g<CR>
+
+"Kill parenthesis
+"Requires Killbrackets extension
+nnoremap <Leader>) :Killbracks<CR>
 
 "Moving around windows
 map <C-j> <C-W>j
@@ -206,7 +213,7 @@ let g:debuggerPort = 9999
 
 " NERDTree Settings---------------------------------------------------- {{{
 "map <leader>t :NERDTreeToggle<CR>
-noremap <leader>t :NERDTreeTabsToggle<CR>
+"noremap <leader>t :NERDTreeTabsToggle<CR>
 " }}}
 
 " Included for PowerLine ---------------------------------------------- {{{
