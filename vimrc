@@ -20,7 +20,7 @@ set nocompatible
 " Pathogen ------------------------------------------------------------ {{{
 call pathogen#infect()
 call pathogen#helptags()
-call pathogen#incubate()
+call pathogen#infect('bundle/{}')
 " " }}}
 
 " Basic options ------------------------------------------------------- {{{
