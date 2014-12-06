@@ -42,7 +42,7 @@ local i_width i_filler filler
 infoline+="╭─"
 infoline+=(${white}'%n'${reset})		# Me
 [[ -n $SSH_CLIENT ]] && infoline+=( "@${yellow}%m${reset}" )
-										# My host, if in SSH
+# My host, if in SSH
 	infoline+=(" in ")
 [[ -w $PWD ]] && infoline+=(${green}) || infoline+=(${yellow})
 	infoline+=($(collapse_pwd)" "${reset})		# Current directory
@@ -60,7 +60,7 @@ filler="${gray}${(l:${i_filler}::─:)}${reset}"
 llines+=( ${(j::)infoline} )
 llines+=( "╰─($(prompt_char)%(1j. %j.) %(!.#.$) ")
 rlines+=("$(git_prompt_info)")
-
+                                                                         
 PROMPT=${(F)llines}
 RPROMPT=${(F)rlines}
 }
