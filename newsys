@@ -77,3 +77,11 @@ git:
 .PHONY: ghci
 
 ghci: ln -s $(CURR_DIR)/gich ~/.ghci
+
+# Homebrew setup
+
+.PHONY: homebrew
+
+homebrew: /usr/local/bin/brew
+	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        brew install caskroom/cask/brew-cask
