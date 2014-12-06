@@ -156,5 +156,3 @@ function fish_right_prompt
     end
   end
 end
-
-set fish_greeting (command ddate)
