@@ -13,6 +13,10 @@
 "inoremap <up> <nop>
 " " }}}
 
+" Fish compatible ----------------------------------------------------- {{{
+set shell=/bin/sh
+" " }}}
+
 " Pathogen ------------------------------------------------------------ {{{
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 call pathogen#infect()
@@ -96,7 +100,7 @@ set guifont=Source\ Code\ Pro\ 14
 " Version 7.3 (703) --------------------------------------------------- {{{
 if v:version >= 703
         set colorcolumn=75
-        set undodir=~/.vim-undo
+        set undodir=~/.vim/undo
         set undofile
         set undolevels=10000 "max number of changes that can be undone
         set undoreload=100000 "max number lines to save for undo
