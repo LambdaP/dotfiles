@@ -1,0 +1,69 @@
+# This Makefile puts in place several tools that I like.
+CURR_DIR = $(shell pwd)
+
+.PHONY: all
+
+all: vim zsh git
+
+~/.config:
+	mkdir -p ~/.config
+
+# Vim setup
+
+VIM_PLUGINS = solarized syntastic
+
+.PHONY: vim pathogen $(VIM_PLUGINS)
+
+vim: ~/.vimrc ~/.vim/bundle pathogen $(VIM_PLUGINS)
+
+pathogen: ~/.vim/bundle/vim-pathogen/autoload/pathogen.vim
+
+solarized: ~/.vim/bundle/vim-colors-solarized/colors/solarized.vim 
+
+syntastic: ~/.vim/bundle/syntastic/plugin/syntastic.vim
+
+~/.vimrc:
+	ln -s $(CURR_DIR)/vimrc ~/.vimrc
+
+~/.vim/bundle:
+	mkdir -p ~/.vim/bundle
+
+~/.vim/bundle/vim-pathogen/autoload/pathogen.vim: ~/.vim/bundle
+	mkdir -p ~/.vim/bundle/vim-pathogen/autoload
+	curl -LSso ~/.vim/bundle/vim-pathogen/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+~/.vim/bundle/vim-colors-solarized/colors/solarized.vim: ~/.vim/bundle
+	git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized
+
+~/.vim/bundle/syntastic/plugin/syntastic.vim: ~/.vim/bundle
+	git clone https://github.com/scrooloose/syntastic.git ~/.vim/bundle/syntastic
+
+# Zsh setup
+
+.PHONY: zsh oh-my-zsh elisa
+
+zsh: oh-my-zsh elisa
+	-mv ~/.zshrc ~/.zshrc.pre_script
+	mkdir -p ~/.config/zsh
+	echo "source $$HOME/.config/zsh/zsh.config" > ~/.zshrc
+	-ln -s $(CURR_DIR)/zsh/zsh.config ~/.config/zsh
+	-ln -s $(CURR_DIR)/zsh/private/path.config ~/.config/zsh
+	-ln -s $(CURR_DIR)/zsh/private/alias.config ~/.config/zsh
+	chsh -s /bin/zsh
+
+oh-my-zsh: ~/.config/oh-my-zsh
+
+elisa: ~/.config/oh-my-zsh/themes/elisa.zsh-theme
+
+~/.config/oh-my-zsh: ~/.config
+	git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.config/oh-my-zsh
+
+~/.config/oh-my-zsh/themes/elisa.zsh-theme: ~/.config/oh-my-zsh
+	-ln -s $(CURR_DIR)/zsh/elisa.zsh-theme ~/.config/oh-my-zsh/themes
+
+# Git setup
+
+.PHONY: git
+
+git:
+	ln -s $(CURR_DIR)/git/gitconfig ~/.gitconfig

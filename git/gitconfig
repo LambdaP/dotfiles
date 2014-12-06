@@ -1,0 +1,21 @@
+[core]
+        editor = vim
+[color]
+        diff        = true
+        branch      = true
+        interactive = true
+        status      = true
+        blame       = true
+[user]
+	name  = Patrick Lambein
+	email = patrick@lambein.name
+[push]
+	default = simple
+[alias]
+        l = log --graph --date=short --pretty=format:'%C(yellow)%h%Creset %ad: %an %n%x09%s%n'
+	grep = grep -n
+
+[help]
+	autocorrect = 1
+[pull]
+	rebase = true
