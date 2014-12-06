@@ -85,3 +85,12 @@ ghci: ln -s $(CURR_DIR)/gich ~/.ghci
 homebrew: /usr/local/bin/brew
 	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         brew install caskroom/cask/brew-cask
+
+# Fish setup
+
+# todo
+
+.PHONY: addfish
+
+addfish:
+        sudo echo "/usr/local/bin/fish" >> /etc/shells
