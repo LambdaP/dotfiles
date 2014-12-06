@@ -3,7 +3,7 @@ CURR_DIR = $(shell pwd)
 
 .PHONY: all
 
-all: vim zsh git
+all: vim zsh git ghci
 
 ~/.config:
 	mkdir -p ~/.config
@@ -71,3 +71,9 @@ elisa: ~/.config/oh-my-zsh/themes/elisa.zsh-theme ~/bin/batcharge.py
 
 git:
 	ln -s $(CURR_DIR)/git/gitconfig ~/.gitconfig
+
+# Ghci setup
+
+.PHONY: ghci
+
+ghci: ln -s $(CURR_DIR)/gich ~/.ghci
