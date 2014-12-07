@@ -93,7 +93,7 @@ let g:solarized_termcolors=16 " 16 if Solarized is the colorscheme of
 colorscheme solarized
 
 " GUI Font
-" https://github.com/adobe/source-code-pro
+" https://github.com/adobe-fonts/source-code-pro
 set guifont=Source\ Code\ Pro\ 14
 " }}}
 
