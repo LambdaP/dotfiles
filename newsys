@@ -6,7 +6,7 @@ CURR_DIR = $(shell pwd)
 all: vim zsh git ghci
 
 ~/.config:
-	mkdir -p ~/.config
+	@mkdir -p ~/.config
 
 # Vim setup
 
@@ -18,37 +18,47 @@ vim: ~/.vimrc ~/.vim/bundle pathogen $(VIM_PLUGINS)
 
 pathogen: ~/.vim/bundle/vim-pathogen/autoload/pathogen.vim
 
-solarized: ~/.vim/bundle/vim-colors-solarized/colors/solarized.vim 
+solarized: ~/.vim/bundle/vim-colors-solarized/colors/solarized.vim
 
 syntastic: ~/.vim/bundle/syntastic/plugin/syntastic.vim
 
 ~/.vimrc:
-	ln -s $(CURR_DIR)/vimrc ~/.vimrc
+	-ln -s $(CURR_DIR)/vimrc ~/.vimrc
 
 ~/.vim/bundle:
-	mkdir -p ~/.vim/bundle
+	@mkdir -p ~/.vim/bundle
 
 ~/.vim/bundle/vim-pathogen/autoload/pathogen.vim: ~/.vim/bundle
-	mkdir -p ~/.vim/bundle/vim-pathogen/autoload
-	curl -LSso ~/.vim/bundle/vim-pathogen/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+	@echo "Vim: installing pathogen..."
+	@mkdir -p ~/.vim/bundle/vim-pathogen/autoload
+	@curl -LSso ~/.vim/bundle/vim-pathogen/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+	@echo "Vim: done."
 
 ~/.vim/bundle/vim-colors-solarized/colors/solarized.vim: ~/.vim/bundle
-	git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized
+	@echo "Vim: installing the Solarized color set..."
+	@git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized
+	@echo "Vim: done."
 
 ~/.vim/bundle/syntastic/plugin/syntastic.vim: ~/.vim/bundle
-	git clone https://github.com/scrooloose/syntastic.git ~/.vim/bundle/syntastic
+	@echo "Vim: installing syntastic..."
+	@git clone https://github.com/scrooloose/syntastic.git ~/.vim/bundle/syntastic
+	@echo "Vim: done."
 
 # Zsh setup
 
 .PHONY: zsh oh-my-zsh elisa
 
 zsh: oh-my-zsh elisa
-	-mv ~/.zshrc ~/.zshrc.pre_script
-	mkdir -p ~/.config/zsh
+	@echo "Zsh: installing config files..."
+	-@mv ~/.zshrc ~/.zshrc.pre_script
+	@mkdir -p ~/.config/zsh
 	echo "source $$HOME/.config/zsh/zsh.config" > ~/.zshrc
-	-ln -s $(CURR_DIR)/zsh/zsh.config ~/.config/zsh
-	-ln -s $(CURR_DIR)/zsh/private/path.config ~/.config/zsh
-	-ln -s $(CURR_DIR)/zsh/private/alias.config ~/.config/zsh
+	-@ln -s $(CURR_DIR)/zsh/zsh.config ~/.config/zsh
+	@touch $(CURR_DIR)/zsh/private/path.config
+	-@ln -s $(CURR_DIR)/zsh/private/path.config ~/.config/zsh
+	@touch $(CURR_DIR)/zsh/private/alias.config
+	-@ln -s $(CURR_DIR)/zsh/private/alias.config ~/.config/zsh
+	@echo "Zsh: done. Changing default shell to zsh:"
 	chsh -s /bin/zsh
 
 oh-my-zsh: ~/.config/oh-my-zsh
@@ -56,36 +66,99 @@ oh-my-zsh: ~/.config/oh-my-zsh
 elisa: ~/.config/oh-my-zsh/themes/elisa.zsh-theme ~/bin/batcharge.py
 
 ~/.config/oh-my-zsh: ~/.config
-	git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.config/oh-my-zsh
+	@echo "Zsh: installing oh-my-zsh..."
+	@git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.config/oh-my-zsh
+	@echo "Zsh: done."
 
-~/.config/oh-my-zsh/themes/elisa.zsh-theme: ~/.config/oh-my-zsh 
+~/.config/oh-my-zsh/themes/elisa.zsh-theme: ~/.config/oh-my-zsh
+	@echo "Zsh: installing the Elisa theme..."
 	-ln -s $(CURR_DIR)/zsh/elisa.zsh-theme ~/.config/oh-my-zsh/themes
+	@echo "Zsh: done."
 
 ~/bin/batcharge.py:
-	mkdir -p ~/bin
-	-ln -s $(CURR_DIR)/zsh/batcharge.py ~/bin
+	@mkdir -p ~/bin
+	-@ln -s $(CURR_DIR)/zsh/batcharge.py ~/bin
 
 # Git setup
 
 .PHONY: git
 
 git:
-	ln -s $(CURR_DIR)/git/gitconfig ~/.gitconfig
+	@echo "Git: installing config file..."
+	-@ln -s $(CURR_DIR)/git/gitconfig ~/.gitconfig
+	@echo "Git: done."
 
 # Ghci setup
 
 .PHONY: ghci
 
-ghci: 
-	ln -s $(CURR_DIR)/gich ~/.ghci
+ghci:
+	@echo "GHCI: installing config file..."
+	-@ln -s $(CURR_DIR)/gich ~/.ghci
+	@echo "GHCI: done."
 
 # Homebrew setup
 
-.PHONY: homebrew
+.PHONY: homebrew cask brews casks
+
+BREWS= # Programs to be installed by Homebrew
+BREWS+=brew-cask
+BREWS+=ddate
+BREWS+=ffmpeg
+BREWS+=fish
+BREWS+=fortune
+BREWS+=ghc
+BREWS+=git
+BREWS+=irssi
+BREWS+=lftp
+BREWS+=readline
+BREWS+=rlwrap
+BREWS+=ssh-copy-id
+BREWS+=sshuttle
+BREWS+=tree
+BREWS+=wget
+BREWS+=cmake
+
+CASKS= # GUI programs to be installed by Homebrew
+CASKS+=bittorrent-sync
+CASKS+=electric-sheep
+CASKS+=filezilla
+CASKS+=firefox
+CASKS+=flux
+CASKS+=iterm2
+CASKS+=spotify
+CASKS+=steam
+CASKS+=virtualbox
+CASKS+=wireshark
 
 homebrew: /usr/local/bin/brew
-	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	brew install caskroom/cask/brew-cask
+
+cask: /usr/local/bin/brew-cask.rb
+
+casks: cask $(CASKS:%=cask-%)
+
+brews: homebrew $(BREWS:%=brew-%)
+
+brew-%:
+	@echo "Installing $* with Homebrew..."
+	-@brew install $*
+	@echo "Done."
+
+cask-%:
+	@echo "Installing $* with Homebrew..."
+	-@brew cask install $*
+	@echo "Done."
+
+/usr/local/bin/brew:
+	@echo "Installing Homebrew..."
+	@ruby -e "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+	@echo "Done. Running brew doctor..."
+	@brew doctor
+
+/usr/local/bin/brew-cask.rb: homebrew
+	@echo "Installing brew-cask..."
+	@brew install caskroom/cask/brew-cask
+	@echo "Done."
 
 # Fish setup
 
@@ -94,4 +167,6 @@ homebrew: /usr/local/bin/brew
 .PHONY: addfish
 
 addfish:
-	sudo echo "/usr/local/bin/fish" >> /etc/shells
+	@echo "Fish: adding Fish in shell list..."
+	@sudo echo "/usr/local/bin/fish" >> /etc/shells
+	@echo "Fish: done."
