@@ -5,6 +5,8 @@ CURR_DIR = $(shell pwd)
 
 all: vim zsh git ghci
 
+programs: brews casks cabals
+
 ~/.config:
 	@mkdir -p ~/.config
 
@@ -185,7 +187,7 @@ cabals: $(CABALS:%=cabal-%)
 
 cabal-%:
 	@echo "Cabal: installing $*..."
-	@cabal install $*
+	-@cabal install $*
 	@echo "Done."
 
 # Fish setup
