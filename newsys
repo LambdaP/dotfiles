@@ -121,11 +121,14 @@ BREWS+=cmake
 
 CASKS= # GUI programs to be installed by Homebrew
 CASKS+=bittorrent-sync
+CASKS+=dropbox
 CASKS+=electric-sheep
+CASKS+=google-drive
 CASKS+=filezilla
 CASKS+=firefox
 CASKS+=flux
 CASKS+=iterm2
+CASKS+=mactex
 CASKS+=spotify
 CASKS+=steam
 CASKS+=virtualbox
@@ -139,13 +142,18 @@ casks: cask $(CASKS:%=cask-%)
 
 brews: homebrew $(BREWS:%=brew-%)
 
-brew-%:
-	@echo "Installing $* with Homebrew..."
+brew-%: homebrew
+	@echo "Homebrew: installing $*..."
 	-@brew install $*
 	@echo "Done."
 
-cask-%:
-	@echo "Installing $* with Homebrew..."
+brewremove-%: homebrew
+	@echo "Homebrew: removing $*..."
+	-@brew uninstall $*
+	@echo "Done."
+
+cask-%: cask
+	@echo "Brew-cask: installing $*..."
 	-@brew cask install $*
 	@echo "Done."
 
@@ -158,6 +166,26 @@ cask-%:
 /usr/local/bin/brew-cask.rb: homebrew
 	@echo "Installing brew-cask..."
 	@brew install caskroom/cask/brew-cask
+	@echo "Done."
+
+# Haskell setup
+
+.PHONY: haskell cabals
+
+CABALS=
+CABALS+= hakyll # Does not work, because Cabal.
+
+# Heaven forbids you rund this in multicore mode.
+haskell: cabal cabal-cabal-install brewremove-cabal-install cabals
+
+cabal: brew-cabal-install
+	cabal update
+
+cabals: $(CABALS:%=cabal-%)
+
+cabal-%:
+	@echo "Cabal: installing $*..."
+	@cabal install $*
 	@echo "Done."
 
 # Fish setup
