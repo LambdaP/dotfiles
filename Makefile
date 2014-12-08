@@ -5,7 +5,7 @@ CURR_DIR = $(shell pwd)
 
 all: vim zsh git ghci
 
-programs: brews casks cabals
+programs: brews casks # cabals because Cabal.
 
 ~/.config:
 	@mkdir -p ~/.config
@@ -105,6 +105,7 @@ ghci:
 
 BREWS= # Programs to be installed by Homebrew
 BREWS+=brew-cask
+BREWS+=ctags
 BREWS+=ddate
 BREWS+=ffmpeg
 BREWS+=fish
@@ -115,6 +116,7 @@ BREWS+=irssi
 BREWS+=lftp
 BREWS+=readline
 BREWS+=rlwrap
+BREWS+=sl
 BREWS+=ssh-copy-id
 BREWS+=sshuttle
 BREWS+=tree
@@ -130,7 +132,9 @@ CASKS+=filezilla
 CASKS+=firefox
 CASKS+=flux
 CASKS+=iterm2
+CASKS+=launchrocket
 CASKS+=mactex
+CASKS+=menumeters
 CASKS+=spotify
 CASKS+=steam
 CASKS+=virtualbox
@@ -175,7 +179,9 @@ cask-%: cask
 .PHONY: haskell cabals
 
 CABALS=
-CABALS+= hakyll # Does not work, because Cabal.
+CABALS+=pandoc
+CABALS+=hakyll # Does not work, because Cabal.
+CABALS+=hoogle
 
 # Heaven forbids you rund this in multicore mode.
 haskell: cabal cabal-cabal-install brewremove-cabal-install cabals
