@@ -96,7 +96,7 @@ git:
 
 ghci:
 	@echo "GHCI: installing config file..."
-	-@ln -s $(CURR_DIR)/gich ~/.ghci
+	-@ln -s $(CURR_DIR)/ghci ~/.ghci
 	@echo "GHCI: done."
 
 # Homebrew setup
