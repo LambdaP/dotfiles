@@ -1,0 +1,18 @@
+# /etc/fstab: static file system information
+#
+# <file system> <dir>   <type>  <options>       <dump>  <pass>
+# /dev/sda1 LABEL=arch
+UUID=$uuid       /               btrfs           rw,noatime,compress=lzo,ssd,discard,autodefrag,inode_cache,subvol=__active             0 0
+
+# /dev/sda1 LABEL=arch
+UUID=$uuid       /home           btrfs           rw,noatime,compress=lzo,ssd,discard,autodefrag,inode_cache,subvol=__active/home        0 0
+
+# /dev/sda1 LABEL=arch
+UUID=$uuid       /var            btrfs           rw,noatime,compress=lzo,ssd,discard,autodefrag,inode_cache,subvol=__active/var         0 0
+
+# /dev/sda1 LABEL=arch
+UUID=$uuid       /usr            btrfs           rw,noatime,compress=lzo,ssd,discard,autodefrag,inode_cache,subvol=__active/usr         0 0
+
+# /dev/sda1 LABEL=arch
+UUID=$uuid       /var/lib/btrfs  btrfs           rw,noatime,compress=lzo,ssd,discard,autodefrag,inode_cache                             0 0
+/var/lib/btrfs/boot     /boot    none            rw,bind                                                                                0 0
