@@ -125,6 +125,7 @@ BREWS+=cmake
 
 CASKS= # GUI programs to be installed by Homebrew
 CASKS+=bittorrent-sync
+CASKS+=calibre
 CASKS+=dropbox
 CASKS+=electric-sheep
 CASKS+=google-drive
@@ -138,6 +139,7 @@ CASKS+=menumeters
 CASKS+=spotify
 CASKS+=steam
 CASKS+=virtualbox
+CASKS+=vlc
 CASKS+=wireshark
 
 homebrew: /usr/local/bin/brew
