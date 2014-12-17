@@ -38,6 +38,8 @@ touch  $CURR_DIR/zsh/private/path.config
 ln -sf $CURR_DIR/zsh/private/path.config ~/.config/zsh
 touch  $CURR_DIR/zsh/private/alias.config
 ln -sf $CURR_DIR/zsh/private/alias.config ~/.config/zsh
+touch $CURR_DIR/zsh/private/zsh_mac.config
+ln -sf $CURR_DIR/zsh/private/zsh_mac.config ~/.config/zsh
 
 echo "Change default shell to zsh."
 chsh -s /bin/zsh
