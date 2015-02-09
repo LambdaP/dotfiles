@@ -2,6 +2,20 @@
 " Tyler Cipriani's can be found at
 " https://github.com/thcipriani/dotfiles/blob/master/vimrc
 
+" Vundle -------------------------------------------------------------- {{{
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'gmarik/Vundle.vim'                      " Vundle manages Vundle.
+Plugin 'altercation/vim-colors-solarized'       " Colorscheme.
+Plugin 'scrooloose/syntastic'                   " Syntax checker.
+Plugin 'wting/rust.vim'                         " Rust syntax highlighting.
+Plugin 'Valloric/YouCompleteMe'                 " C family completer.
+call vundle#end()
+filetype plugin indent on
+" }}}
+
 " Vim. Live it. ------------------------------------------------------- {{{
 "noremap <up> <nop>
 "noremap <down> <nop>
@@ -17,15 +31,8 @@
 set shell=/bin/sh
 " " }}}
 
-" Pathogen ------------------------------------------------------------ {{{
-runtime bundle/vim-pathogen/autoload/pathogen.vim
-call pathogen#infect()
-call pathogen#helptags()
-" " }}}
-
 " Basic options ------------------------------------------------------- {{{
 let mapleader=","
-set nocompatible
 set t_Co=256        " My terminal's got all those colors, yo
 
 set title           " Change the terminal title
@@ -76,8 +83,13 @@ set fileformats=unix,dos,mac
 
 set undodir^=~/.vim/undo/ " Places .un~ files in the correct directory
 
-" Use syntastic for C files
-let g:syntastic_c_checkers=['make']
+" Syntastic options
+let g:syntastic_c_checkers=['make'] " Use syntastic for C files
+let g:syntastic_haskell_ghc_mod_exec = 'ghc-mod.sh'
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
 " Yell for long lines
 au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>75v.\+', -1)
@@ -185,6 +197,9 @@ set statusline=%f " Path.
 set statusline+=%m " Modified flag.
 set statusline+=%r " Readonly flag.
 set statusline+=%w " Preview window flag.
+set statusline+=%#warningmsg# " Syntastic
+set statusline+=%{SyntasticStatuslineFlag()} "Syntastic
+set statusline+=%* " ??? (Syntastic)
 set statusline+=\ " Space.
 set statusline+=%= " Right align.
 " Line and column position and counts.

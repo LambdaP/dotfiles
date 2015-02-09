@@ -14,11 +14,7 @@ ln -sf $CURR_DIR/vimrc ~/.vimrc
 
 echo "Install vim plugins."
 mkdir -p ~/.vim/bundle
-mkdir -p ~/.vim/bundle/vim-pathogen/autoload
-curl -LSso ~/.vim/bundle/vim-pathogen/autoload/pathogen.vim https://tpo.pe/pathogen.vim
-git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized
-git clone https://github.com/scrooloose/syntastic.git ~/.vim/bundle/syntastic
-git clone https://github.com/wting/rust.vim.git ~/.vim/bundle/rust.vim
+git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 echo "Install oh-my-zsh and the Elisa theme."
 git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.config/oh-my-zsh
