@@ -36,33 +36,39 @@ function collapse_pwd {
 }
 
 function setprompt() {
-local -a infoline llines rlines
-local i_width i_filler filler
+    local -a infoline llines rlines
+    local i_width i_filler filler
 
-infoline+="╭─"
-infoline+=(${white}'%n'${reset})		# Me
-[[ -n $SSH_CLIENT ]] && infoline+=( "@${yellow}%m${reset}" )
-# My host, if in SSH
-	infoline+=(" in ")
-[[ -w $PWD ]] && infoline+=(${green}) || infoline+=(${yellow})
-	infoline+=($(collapse_pwd)" "${reset})		# Current directory
-infoline+=( $(battery_charge) )
+    infoline+="╭─ "
+    infoline+=(${white}'%n'${reset}) # Me
+    if [[ -n $SSH_CLIENT ]]; then
+        infoline+=( "${infoline[1]}@${yellow}%m${reset}" ) # Host if SSH'd
+    fi
+    infoline+=(" in ")
+    if [[ -w $PWD ]]; then                      # Owned directory?
+        infoline+=(${green})
+    else
+        infoline+=(${yellow})
+    fi
+    infoline+=("$(collapse_pwd)"" "${reset})    # Current directory
+    infoline+=("$(battery_charge)")
 
-i_width=${(S)infoline//\%\{*\%\}}
-i_width=${#${(%)i_width}}
+    # To understand this, a look into man zshexpn is helpful.
+    i_width=${(S)infoline//\%\{*\%\}}
+    # FIXME: this breaks on non-ASCII characters.
+    i_width=${#${(%)i_width}}
 
-i_filler=$(($COLUMNS - $i_width + 5))
+    i_filler=$(($COLUMNS - $i_width + 5))
 
-filler="${gray}${(l:${i_filler}::─:)}${reset}"
-[[ -n $SSH_CLIENT ]] && infoline[6]=( "${infoline[6]}${filler}" )\
-	|| infoline[5]=( "${infoline[5]}${filler}" )
+    filler="${gray}${(l:${i_filler}::─:)}${reset}"
+    infoline[5]=( "${infoline[5]}${filler}" )
 
-llines+=( ${(j::)infoline} )
-llines+=( "╰─($(prompt_char)%(1j. %j.) %(!.#.$) ")
-rlines+=("$(git_prompt_info)")
-                                                                         
-PROMPT=${(F)llines}
-RPROMPT=${(F)rlines}
+    llines+=( ${(j::)infoline} )
+    llines+=( "╰─($(prompt_char)%(1j. %j.) %(!.#.$) ")
+    rlines+=("$(git_prompt_info)")
+
+    PROMPT=${(F)llines}
+    RPROMPT=${(F)rlines}
 }
 
 # ZSH prompt display option
@@ -73,5 +79,5 @@ ZSH_THEME_GIT_PROMPT_UNTRACKED="${green}?"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 
 function precmd {
-	setprompt
+    setprompt
 }
