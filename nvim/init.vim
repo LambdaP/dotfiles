@@ -13,10 +13,8 @@ Plug 'scrooloose/nerdtree'
 " NERDtree git integration.
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
-" TODO: find what this is, document or remove.
-" I think it only really matters with neco-ghc,
-" and probably mostly for vim.
-Plug 'Shougo/vimproc.vim'
+" Show local tags.
+Plug 'majutsushi/tagbar'
 
 " Asynchronous :make, awesome checker.
 Plug 'benekastah/neomake'
@@ -155,12 +153,7 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " Close if last window is a NERD Tree window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" Syntastic checkers options
-let g:syntastic_c_checkers                      = ['make'] " Use syntastic for C files
-let g:syntastic_always_populate_loc_list        = 1
-let g:syntastic_auto_loc_list                   = 1
-let g:syntastic_check_on_open                   = 1
-let g:syntastic_check_on_wq                     = 0
+source ~/.config/nvim/hasktags.vim
 
 " }}}
 

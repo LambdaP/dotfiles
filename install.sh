@@ -2,7 +2,7 @@
 
 CURR_DIR=$(pwd)
 
-mkdir -p ./config
+mkdir -p ./config{vim,nvim,zsh}
 
 echo "Link .vimrc."
 if [ -e ~/.vimrc ]
@@ -12,26 +12,23 @@ fi
 
 ln -sf $CURR_DIR/vimrc ~/.vimrc
 
+echo "Install vim-plug for vim."
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
 # Neovim
 
 echo "Link nvim/init.vim."
 if [-e ~/.config/nvim/init.vim ]
 then
-        mv ~/.config/nvim/init.vim ~/.config/nvim/init.vim.pre_script
+        mv ~/.config/nvim ~/.config/nvim.pre_script
 fi
 
-mkdir -p ~/.config/nvim
-
-ln -sf $CURR_DIR/nvim/init.vim ~/.config/nvim/init.vim
-
-echo "Install vim-plug for vim."
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+ln -sf $CURR_DIR/nvim/* ~/.config/nvim/
 
 echo "Install vim-plug for neovim."
 curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
 
 echo "Install oh-my-zsh and the Elisa theme."
 git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.config/oh-my-zsh
@@ -42,18 +39,13 @@ ln -sf $CURR_DIR/zsh/batcharge.py ~/bin
 echo "Install zshrc."
 if [ -e ~/.zshrc ]
 then
-	mv ~/.zshrc ~/.zshrc.pre_script
+	mv ~/.zshrc ~/.config/zshrc.pre_script
 fi
 
-mkdir -p ~/.config/zsh
 echo "source $HOME/.config/zsh/zsh.config" > ~/.zshrc
-ln -sf $CURR_DIR/zsh/zsh.config ~/.config/zsh
-touch  $CURR_DIR/zsh/private/path.config
-ln -sf $CURR_DIR/zsh/private/path.config ~/.config/zsh
-touch  $CURR_DIR/zsh/private/alias.config
-ln -sf $CURR_DIR/zsh/private/alias.config ~/.config/zsh
-touch $CURR_DIR/zsh/private/zsh_mac.config
-ln -sf $CURR_DIR/zsh/private/zsh_mac.config ~/.config/zsh
+
+ln -sf $CURR_DIR/zsh/zsh.config ~/.config/zsh/
+ln -sf $CURR_DIR/zsh/private/*  ~/.config/zsh/
 
 echo "Change default shell to zsh."
 chsh -s /bin/zsh
