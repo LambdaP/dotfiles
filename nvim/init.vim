@@ -5,36 +5,30 @@ call plug#begin()
 " My favorite colorscheme.
 Plug 'altercation/vim-colors-solarized'
 
+" Thank you for flying neovim.
+Plug 'bling/vim-airline'
+
+" Filesystem explorer.
+Plug 'scrooloose/nerdtree'
+" NERDtree git integration.
+Plug 'Xuyuanp/nerdtree-git-plugin'
+
 " TODO: find what this is, document or remove.
 " I think it only really matters with neco-ghc,
 " and probably mostly for vim.
 Plug 'Shougo/vimproc.vim'
 
-" Syntax checker.
-Plug 'scrooloose/syntastic' ", { 'for': 'c' }
-                            " I would like to add laziness, but line
-                            " set statusline+=%{SyntasticStatuslineFlag()}
-                            " complains about SyntasticStatuslineFlag not
-                            " being there (which is isn't). Checks for
-                            " existence never seem to work, even when
-                            " syntastic is there.
+" Asynchronous :make, awesome checker.
+Plug 'benekastah/neomake'
 
 " Dark powered neo-completion.
 " Requires neovim-python.
 " See: https://neovim.io/doc/user/nvim_python.html
 Plug 'Shougo/deoplete.nvim'
 
-" Filesystem explorer.
-Plug 'scrooloose/nerdtree'
-
-" NERDtree git integration.
-Plug 'Xuyuanp/nerdtree-git-plugin'
-
 " Rust syntax highlighting.
 " Plug 'wting/rust.vim', { 'for': 'rust' }
 
-" Haskell lints, checks, and fancy things.
-Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 " Haskell autocompletion (works with deoplete, YCM, omni)
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 " Haskell syntax highlighting
@@ -147,11 +141,11 @@ function! s:my_cr_function() abort
   return deoplete#mappings#close_popup() . "\<CR>"
 endfunction
 
-" Don't yell for redundant Haskell code
-let g:ghcmod_hlint_options = ['--ignore=Redundant $']
+" Neomake after each write.
+autocmd! BufWritePost * Neomake
 
-" Auto-check with ghc-mod
-autocmd BufWritePost *.hs GhcModCheckAndLintAsync
+" Open fix list when found.
+let g:neomake_open_list = 2
 
 " NERD Tree on launch
 autocmd vimenter * NERDTree
@@ -248,26 +242,5 @@ function! NumberToggle()
 endfunc
 
 nnoremap <leader>n :call NumberToggle()<cr>
-
-" }}}
-
-" Status line --------------------------------------------------------- {{{
-
-augroup ft_statuslinecolor
-        au!
-        au InsertEnter * hi StatusLine ctermfg=196 guifg=#FF3145
-        au InsertLeave * hi StatusLine ctermfg=130 guifg=#CD5907
-augroup END
-set statusline=%f " Path.
-set statusline+=%m " Modified flag.
-set statusline+=%r " Readonly flag.
-set statusline+=%w " Preview window flag.
-set statusline+=%#warningmsg# " Syntastic
-set statusline+=%{SyntasticStatuslineFlag()} "Syntastic
-set statusline+=%* " ??? (Syntastic)
-set statusline+=\ " Space.
-set statusline+=%= " Right align.
-" Line and column position and counts.
-set statusline+=\ (line\ %l\/%L,\ col\ %03c)
 
 " }}}
