@@ -22,7 +22,7 @@ fi
 
 mkdir -p ~/.config/nvim
 
-ln -sf $CURR_DIR/.config/init.vim ~/nvim.config
+ln -sf $CURR_DIR/nvim/init.vim ~/.config/nvim/init.vim
 
 echo "Install vim-plug for vim."
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
