@@ -2,7 +2,7 @@
 
 CURR_DIR=$(pwd)
 
-mkdir -p ./config{vim,nvim,zsh}
+mkdir -p ./config/{vim,nvim,zsh}
 
 echo "Link .vimrc."
 if [ -e ~/.vimrc ]
@@ -19,7 +19,7 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 # Neovim
 
 echo "Link nvim/init.vim."
-if [-e ~/.config/nvim/init.vim ]
+if [ -e ~/.config/nvim/init.vim ]
 then
         mv ~/.config/nvim ~/.config/nvim.pre_script
 fi
