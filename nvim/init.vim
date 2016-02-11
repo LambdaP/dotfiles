@@ -2,6 +2,9 @@
 
 call plug#begin()
 
+" Handy terminal.
+Plug 'kassio/neoterm'
+
 " My favorite colorscheme.
 Plug 'altercation/vim-colors-solarized'
 
@@ -25,7 +28,10 @@ Plug 'benekastah/neomake'
 Plug 'Shougo/deoplete.nvim'
 
 " Rust syntax highlighting.
-" Plug 'wting/rust.vim', { 'for': 'rust' }
+Plug 'wting/rust.vim', { 'for': 'rust' }
+
+" Purescript syntax highlighting.
+Plug 'raichoo/purescript-vim', { 'for': 'purescript' }
 
 " Haskell autocompletion (works with deoplete, YCM, omni)
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
@@ -33,6 +39,8 @@ Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 " Vim Haskell search.
 Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
+" Prettify Haskell code.
+Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }
 " Crazy Haskell concealing.
 " Plug 'enomsg/vim-haskellConcealPlus'
 
@@ -110,6 +118,11 @@ set undolevels=10000  " max number of changes that can be undone
 set undoreload=100000 " max number lines to save for undo
                       " on buffer reload
 
+" Sane auto-completion
+set wildignore+=*\\tmp\\*,*.swp,*.swo,*.zip,.git,.cabal-sandbox
+set wildmode=longest,list,full
+set completeopt+=longest
+
 " https://github.com/adobe-fonts/source-code-pro
 set guifont=Source\ Code\ Pro\ 14 " GUI font
 
@@ -129,15 +142,15 @@ let g:deoplete#auto_completion_start_length = 2
 " Have types in neco-ghc -- this slows up things a bit. Use 0 for faster.
 let g:necoghc_enable_detailed_browse = 1
 
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
-inoremap <expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
-
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function() abort
-  return deoplete#mappings#close_popup() . "\<CR>"
-endfunction
+" " <C-h>, <BS>: close popup and delete backword char.
+" inoremap <expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
+" inoremap <expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
+" 
+" " <CR>: close popup and save indent.
+" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+" function! s:my_cr_function() abort
+"   return deoplete#mappings#close_popup() . "\<CR>"
+" endfunction
 
 " Neomake after each write.
 autocmd! BufWritePost * Neomake
@@ -235,5 +248,11 @@ function! NumberToggle()
 endfunc
 
 nnoremap <leader>n :call NumberToggle()<cr>
+
+" terminal sanity
+
+tnoremap <Esc> <C-\><C-n> 
+
+let g:neoterm_size = 10
 
 " }}}

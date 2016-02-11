@@ -11,8 +11,8 @@ Plug 'scrooloose/syntastic'
 " Interactive command execution.
 Plug 'Shougo/vimproc.vim'
 
-" I have strong feelings about my editor.
-Plug 'Valloric/YouCompleteMe'
+" " I have strong feelings about my editor.
+" Plug 'Valloric/YouCompleteMe'
 
 " Filesystem explorer.
 Plug 'scrooloose/nerdtree'
