@@ -2,7 +2,7 @@
 
 CURR_DIR=$(pwd)
 
-mkdir -p ./config/{vim,nvim,zsh}
+mkdir -p ~/.config/{vim,nvim,zsh}
 
 echo "Link .vimrc."
 if [ -e ~/.vimrc ]
