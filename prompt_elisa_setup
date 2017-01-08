@@ -1,0 +1,165 @@
+# # Elisa Oh-my-zsh! theme
+# # Designed by Patrick Lambein
+# # Inspired by Steve Losh's .zshrc
+# # (http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/)
+# # and by the Nethack Zsh Prompt
+# # (http://eseth.org/2009/nethack-term.html)
+# # 11 march 2013
+
+# 16 Terminal Colors
+# -- ---------------
+#  0 black
+#  1 red
+#  2 green
+#  3 yellow
+#  4 blue
+#  5 magenta
+#  6 cyan
+#  7 white
+#  8 bright black
+#  9 bright red
+# 10 bright green
+# 11 bright yellow
+# 12 bright blue
+# 13 bright magenta
+# 14 bright cyan
+# 15 bright white
+
+function prompt_elisa_precmd {
+  vcs_info
+}
+
+function prompt_elisa_prompt_char {
+  # TODO: Should try with vcs_info instead
+  git branch >/dev/null 2>/dev/null && print -n '±' && return
+  print -n '○'
+}
+
+function prompt_elisa_collapse_pwd {
+  echo $(pwd | sed -e "s,^$HOME,~,")
+}
+
+function prompt_elisa_battery {
+  local full_battery_char="▸"
+  local empty_battery_char='▹'
+
+  if [[ $OSTYPE =~ darwin && -f /usr/sbin/ioreg && -x /usr/sbin/ioreg ]]; then
+    if [[ -f /usr/sbin/ioreg && -x /usr/sbin/ioreg ]]; then
+      # Pre-Grep as much information as possible to save some memory and
+      # avoid pollution of the xtrace output.
+      local raw_data="$(ioreg -n AppleSmartBattery | grep -E "MaxCapacity|TimeRemaining|CurrentCapacity|ExternalConnected|IsCharging")"
+        
+      # Chech whether there is a battery on the system
+      if [[ -n $(echo $raw_data | grep MaxCapacity) ]]; then
+        # Get charge values
+        local max_capacity=$(echo $raw_data | grep MaxCapacity | awk '{ print $5 }')
+        local current_capacity=$(echo $raw_data | grep CurrentCapacity | awk '{ print $5 }')
+
+        local is_charging=$(echo $raw_data | grep IsCharging | awk '{ print $5 }')
+
+        if [[ -n "$max_capacity" && -n "$current_capacity" ]]; then
+          typeset -i 10 bat_percent
+          bat_percent=$(( (current_capacity * 100) / max_capacity ))
+        fi
+      fi
+    fi
+  # TODO: implement Linux version
+  # elif [[ $OSTYPE =~ linux ]]
+  fi
+
+  if [[ -n ${bat_percent+x} ]]; then
+    typeset -i 10 charged
+    local charged=$((bat_percent / 10))
+    local non_charged=$((10 - charged))
+    
+    local full=${(l:${charged}::▸:)}
+    local empty=${(l:${non_charged}::▹:)}
+
+    # TODO: refactor
+    #       also the colors aren't working too well
+    if [[ "$is_charging" =~ "Yes" ]]; then
+      if [[ "$charged" -gt 6 ]]; then
+        print -n "%F{10}$full$empty%f"
+      elif [[ 4 < $charged ]]; then
+        print -n "%F{11}$full$empty%f"
+      else
+        print -n "%F{9}$full$empty%f"
+      fi
+    else
+      if [[ "$charged" -gt 6 ]]; then
+        print -n "%F{2}$full$empty%f"
+      elif [[ 4 < $charged ]]; then
+        print -n "%F{3}$full$empty%f"
+      else
+        print -n "%F{1}$full$empty%f"
+      fi
+    fi
+  else
+    print -n "─────────o"
+  fi
+}
+
+function collapse_pwd {
+    print -n $(pwd | sed -e "s,^$HOME,~,")
+}
+
+function prompt_elisa_build_infoline {
+  local -a infoline
+  infoline+="╭─ "
+  infoline+="%F{7}%n%f" # Me
+  local distant_machine="@%F{3}%m%f"
+  infoline+="${SSH_TTY:+$distant_machine}" # Host if ssh'd
+
+  infoline+=" in "
+  if [[ -w $PWD ]]; then
+    infoline+="%F{2}"
+  else
+    infoline+="%F{3}"
+  fi
+  infoline+="$(collapse_pwd)%f "
+
+  infoline+="$(prompt_elisa_battery)"
+
+  # To understand this, a look into man zshexpn is helpful.
+  i_width=${(S)infoline//\%\{*\%\}}
+  # FIXME: this breaks on non-ASCII characters.
+  i_width=${#${(%)i_width}}
+
+  # TODO: this is awkward.
+  i_filler=$(($COLUMNS - $i_width + 35))
+
+  filler="${(l:${i_filler}::─:)}"
+  infoline[6]=( "${infoline[6]}${filler}" )
+
+  local -a llines=(${(j::)infoline})
+  llines+=( "╰─($(prompt_elisa_prompt_char)%(1j. %j.) %(!.#.$) ")
+  print -n ${(F)llines}
+}
+
+function prompt_elisa_setup {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+  prompt_opts=(cr percent subst)
+
+  autoload -Uz add-zsh-hook
+  autoload -Uz vcs_info
+
+  add-zsh-hook precmd prompt_elisa_precmd
+
+  local max_path_chars=30
+  local user_char='$'
+  local root_char='#'
+
+  zstyle ':vcs_info:*' check-for-changes true
+  zstyle ':vcs_info:*' unstagedstr '!'
+  zstyle ':vcs_info:*' stagedstr '+'
+  zstyle ':vcs_info:*' enable git
+  zstyle ':vcs_info:*' formats "[%F{5}%b%f%F{10}%m%u%c%f]"
+  zstyle ':vcs_info:*' actionformats "[%b%m%u%c (%a)]"
+  zstyle ':vcs_info:*' nvcsformats ""
+
+  PROMPT='$(prompt_elisa_build_infoline)'
+  RPROMPT='${vcs_info_msg_0_}'
+}
+
+prompt_elisa_setup "$@"
