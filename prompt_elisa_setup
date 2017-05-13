@@ -95,17 +95,18 @@ function prompt_elisa_battery {
       fi
     fi
   else
-    print -n "─────────o"
+    print -n ""
   fi
 }
 
 function collapse_pwd {
-    print -n $(pwd | sed -e "s,^$HOME,~,")
+    print -n $(promptpwd)
 }
 
 function prompt_elisa_build_infoline {
   local -a infoline
-  infoline+="╭─ "
+  infoline+="╭─"
+  infoline+="$(prompt_elisa_battery) "
   infoline+="%F{7}%n%f" # Me
   local distant_machine="@%F{3}%m%f"
   infoline+="${SSH_TTY:+$distant_machine}" # Host if ssh'd
@@ -116,23 +117,11 @@ function prompt_elisa_build_infoline {
   else
     infoline+="%F{3}"
   fi
-  infoline+="$(collapse_pwd)%f "
-
-  infoline+="$(prompt_elisa_battery)"
-
-  # To understand this, a look into man zshexpn is helpful.
-  i_width=${(S)infoline//\%\{*\%\}}
-  # FIXME: this breaks on non-ASCII characters.
-  i_width=${#${(%)i_width}}
-
-  # TODO: this is awkward.
-  i_filler=$(($COLUMNS - $i_width + 35))
-
-  filler="${(l:${i_filler}::─:)}"
-  infoline[6]=( "${infoline[6]}${filler}" )
+  infoline+="$(promptpwd)%f"
+  infoline+="%(1j. [%j].)"
 
   local -a llines=(${(j::)infoline})
-  llines+=( "╰─($(prompt_elisa_prompt_char)%(1j. %j.) %(!.#.$) ")
+  llines+=( "╰─($(prompt_elisa_prompt_char) %(!.#.$) ")
   print -n ${(F)llines}
 }
 
