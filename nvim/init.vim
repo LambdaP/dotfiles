@@ -22,10 +22,15 @@ Plug 'majutsushi/tagbar'
 " Asynchronous :make, awesome checker.
 Plug 'benekastah/neomake'
 
+" Vim motions on speed
+Plug 'easymotion/vim-easymotion'
+
 " Dark powered neo-completion.
 " Requires neovim-python.
 " See: https://neovim.io/doc/user/nvim_python.html
-Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
+Plug 'Shougo/echodoc.vim'
 
 " Rust syntax highlighting.
 Plug 'wting/rust.vim', { 'for': 'rust' }
@@ -44,6 +49,8 @@ Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }
 " Crazy Haskell concealing.
 " Plug 'enomsg/vim-haskellConcealPlus'
 
+" Support for writing LaTeX documents
+Plug 'lervag/vimtex', { 'for': 'tex' }
 " TODO: look into those.
 " Plug 'vim-pandoc/vim-pandoc'
 " Plug 'vim-pandoc/vim-pandoc-syntax'
@@ -94,9 +101,9 @@ set expandtab       " Expand tabs to spaces
 " hs   -> 2
 " C    -> 8?
 " rest -> 4
-set tabstop=8       " 8 spaces
-set shiftwidth=8    " 8 spaces
-set softtabstop=8   " 8 spaces
+set tabstop=4       " 8 spaces
+set shiftwidth=4    " 8 spaces
+set softtabstop=4   " 8 spaces
 
 set ignorecase      " when searching
 set smartcase       " …unless I use an uppercase character
@@ -128,6 +135,9 @@ set guifont=Source\ Code\ Pro\ 14 " GUI font
 
 " Yell for long lines
 au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>75v.\+', -1)
+
+" Preview :s
+set inccommand=nosplit
 
 " }}}
 
@@ -167,6 +177,34 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 source ~/.config/nvim/hasktags.vim
+
+" Haskell-vim indentation
+let g:haskell_indent_where = 2
+
+" Use Skim to work with VimTeX
+let g:vimtex_view_general_viewer
+      \ = '/Applications/Skim.app/Contents/SharedSupport/displayline'
+let g:vimtex_view_general_options = '-r @line @pdf @tex'
+
+" This adds a callback hook that updates Skim after compilation
+let g:vimtex_latexmk_callback_hooks = ['UpdateSkim']
+function! UpdateSkim(status)
+  if !a:status | return | endif
+
+  let l:out = b:vimtex.out()
+  let l:tex = expand('%:p')
+  let l:cmd = [g:vimtex_view_general_viewer, '-r']
+  if !empty(system('pgrep Skim'))
+    call extend(l:cmd, ['-g'])
+  endif
+  if has('nvim')
+    call jobstart(l:cmd + [line('.'), l:out, l:tex])
+  elseif has('job')
+    call job_start(l:cmd + [line('.'), l:out, l:tex])
+  else
+    call system(join(l:cmd + [line('.'), shellescape(l:out), shellescape(l:tex)], ' '))
+  endif
+endfunction
 
 " }}}
 
