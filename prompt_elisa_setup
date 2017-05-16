@@ -63,8 +63,8 @@ function prompt_elisa_battery {
         fi
       fi
     fi
-  # TODO: implement Linux version
-  # elif [[ $OSTYPE =~ linux ]]
+  elif [[ $OSTYPE =~ linux ]]; then
+    bat_percent=$(cat /sys/class/power_supply/BAT0/capacity)
   fi
 
   if [[ -n ${bat_percent+x} ]]; then
