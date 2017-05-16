@@ -2,19 +2,7 @@
 
 CURR_DIR=$(pwd)
 
-mkdir -p ~/.config/{vim,nvim}
-
-echo "Link .vimrc."
-if [ -e ~/.vimrc ]
-then
-	mv ~/.vimrc ~/.vimrc.pre_script
-fi
-
-ln -sf $CURR_DIR/vimrc ~/.vimrc
-
-echo "Install vim-plug for vim."
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+mkdir -p ~/.config/nvim
 
 # Neovim
 
