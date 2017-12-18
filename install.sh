@@ -3,10 +3,8 @@
 CURR_DIR=$(pwd)
 
 ./install_vi.sh
-./install_zsh.sh
+./install_zsh.sh # TODO: update this
 
-echo "Install git config."
-ln -sf $CURR_DIR/git/gitconfig ~/.gitconfig
-
-echo "Install ghci config."
-ln -sf $CURR_DIR/ghci ~/.ghci
+stow prezto
+stow git
+stow ghci

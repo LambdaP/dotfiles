@@ -100,7 +100,7 @@ function prompt_elisa_battery {
 }
 
 function collapse_pwd {
-    print -n $(promptpwd)
+    print -n $(prompt-pwd)
 }
 
 function prompt_elisa_build_infoline {
@@ -117,7 +117,7 @@ function prompt_elisa_build_infoline {
   else
     infoline+="%F{3}"
   fi
-  infoline+="$(promptpwd)%f"
+  infoline+="$(prompt-pwd)%f"
   infoline+="%(1j. [%j].)"
 
   local -a llines=(${(j::)infoline})

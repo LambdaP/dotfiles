@@ -38,6 +38,8 @@ Plug 'wting/rust.vim', { 'for': 'rust' }
 " Purescript syntax highlighting.
 Plug 'raichoo/purescript-vim', { 'for': 'purescript' }
 
+" Run ghcid in nvim
+Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim', 'for': 'haskell' }
 " Haskell autocompletion (works with deoplete, YCM, omni)
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 " Haskell syntax highlighting
@@ -81,6 +83,7 @@ set title           " Change the terminal title
 set showcmd         " count highlighted
 set ruler           " Show where I am in the command area
 set colorcolumn=75  " vertical ruler at 75 characters
+set textwidth=75    " Wrap at 75 columns
 set laststatus=2    " always show the status line
                     " ↪ (0 = never, 1 = default [multi-window only])
 
@@ -101,9 +104,9 @@ set expandtab       " Expand tabs to spaces
 " hs   -> 2
 " C    -> 8?
 " rest -> 4
-set tabstop=4       " 8 spaces
-set shiftwidth=4    " 8 spaces
-set softtabstop=4   " 8 spaces
+set tabstop=2       " 8 spaces
+set shiftwidth=2    " 8 spaces
+set softtabstop=2   " 8 spaces
 
 set ignorecase      " when searching
 set smartcase       " …unless I use an uppercase character
