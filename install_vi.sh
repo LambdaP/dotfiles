@@ -4,12 +4,13 @@ CURR_DIR=$(pwd)
 
 echo "Installing nvim."
 
-if [ -e ~/.config/nvim/init.vim ]
+if [ -e ~/.config/nvim ]
 then
         mv ~/.config/nvim ~/.config/nvim.pre_script
 fi
 
-stow nvim
+mkdir -p ~/.config/nvim # Do not symlink ~/.config/nvim to dotfiles/nvim
+stow -v nvim --target=$HOME
 
 echo "Installing vim-plug for neovim."
 curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
