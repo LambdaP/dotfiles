@@ -1,0 +1,3 @@
+[submodule "zplug/.zplug"]
+	path = zplug/.zplug
+	url = https://github.com/zplug/zplug

@@ -1,28 +1,33 @@
-# FIXME As it is, this script does not set up zsh properly
 # #!/bin/sh
 
-CURR_DIR=$(pwd)
+DOTFILES=$(pwd)
 ZSH_CONFIG_DIR=$HOME/.config/zsh
 
+# Symlink zsh config files
 mkdir -p ZSH_CONFIG_DIR
 
-stow -v zsh --target=$HOME
-stow -v zsh --target=$HOME --dir=$CURR_DIR/local
-
-echo "Install zshrc."
+# Save previous .zshrc file
 if [ -e ~/.zshrc ]
 then
-	mv ~/.zshrc ~/.config/zshrc.pre_script
+	mv ~/.zshrc ~/.zshrc.pre_script
 fi
 
-echo "source $ZSH_CONFIG_DIR/zsh.config" > ~/.zshrc
+stow -v zsh --target=$HOME
+stow -v zsh --target=$HOME --dir=$DOTFILES/local
 
-# TODO: this should be replaced with deployment of the theme as it is nowadays.
-# echo "Install oh-my-zsh and the Elisa theme."
-# git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.config/oh-my-zsh
-# ln -sf $CURR_DIR/zsh/elisa.zsh-theme ~/.config/oh-my-zsh/themes
-# mkdir -p ~/bin
-# ln -sf $CURR_DIR/zsh/batcharge.py ~/bin
+# Install zplug
+
+git submodule init
+git submodule update
+
+stow -v zplug --target=$HOME
+
+ZPLUG_HOME=$HOME/.zplug
+
+# Symlink prompt_elisa_setup into zplug directly because I can't figure out
+# how to add an external prompt to prezto.
+mkdir -p $ZPLUG_HOME/repos/sorin-ionescu/prezto/modules/prompt/functions
+stow -v prezto --target=$ZPLUG_HOME/repos/sorin-ionescu
 
 echo "Change default shell to zsh."
 chsh -s /bin/zsh
