@@ -7,7 +7,7 @@ all:
 	$(CURR_DIR)/install.sh
 	$(CURR_DIR)/install_mac.sh
 
-programs: brews casks # cabals because Cabal.
+programs: brews casks
 
 # Homebrew setup
 
@@ -75,31 +75,7 @@ cask-%: cask
 	-@brew cask install $*
 	@echo "Done."
 
-# Haskell setup
-
-.PHONY: haskell cabals
-
-CABALS=
-CABALS+=pandoc
-CABALS+=hakyll # Does not work, because Cabal.
-CABALS+=hoogle
-
-# Heaven forbids you rund this in multicore mode.
-haskell: cabal cabal-cabal-install brewremove-cabal-install cabals
-
-cabal: brew-cabal-install
-	cabal update
-
-cabals: $(CABALS:%=cabal-%)
-
-cabal-%:
-	@echo "Cabal: installing $*..."
-	-@cabal install $*
-	@echo "Done."
-
 # Fish setup
-
-# todo
 
 .PHONY: addfish
 
