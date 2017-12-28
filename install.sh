@@ -3,8 +3,7 @@
 CURR_DIR=$(pwd)
 
 ./install_vi.sh
-./install_zsh.sh # TODO: update this
+./install_zsh.sh
 
-stow prezto --target=$HOME
 stow git    --target=$HOME
 stow ghci   --target=$HOME
