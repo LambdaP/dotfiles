@@ -1,99 +1,27 @@
-" vim-plug ------------------------------------------------------------ {{{
-
-call plug#begin()
-
-" Handy terminal.
-Plug 'kassio/neoterm'
-
-" My favorite colorscheme.
-Plug 'altercation/vim-colors-solarized'
-
-" Thank you for flying neovim.
-Plug 'bling/vim-airline'
-
-" Filesystem explorer.
-Plug 'scrooloose/nerdtree'
-" NERDtree git integration.
-Plug 'Xuyuanp/nerdtree-git-plugin'
-
-" Show local tags.
-Plug 'majutsushi/tagbar'
-
-" Asynchronous :make, awesome checker.
-Plug 'benekastah/neomake'
-
-" Vim motions on speed
-Plug 'easymotion/vim-easymotion'
-
-" Dark powered neo-completion.
-" Requires neovim-python.
-" See: https://neovim.io/doc/user/nvim_python.html
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-
-Plug 'Shougo/echodoc.vim'
-
-" Rust syntax highlighting.
-Plug 'wting/rust.vim', { 'for': 'rust' }
-
-" Purescript syntax highlighting.
-Plug 'raichoo/purescript-vim', { 'for': 'purescript' }
-
-" Run ghcid in nvim
-Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim', 'for': 'haskell' }
-" Haskell autocompletion (works with deoplete, YCM, omni)
-Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
-" Haskell syntax highlighting
-Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
-" Vim Haskell search.
-Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
-" Prettify Haskell code.
-Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }
-" Crazy Haskell concealing.
-" Plug 'enomsg/vim-haskellConcealPlus'
-
-" Support for writing LaTeX documents
-Plug 'lervag/vimtex', { 'for': 'tex' }
-" TODO: look into those.
-" Plug 'vim-pandoc/vim-pandoc'
-" Plug 'vim-pandoc/vim-pandoc-syntax'
-" Plug 'mhinz/neovim-remote'
-" Plug 'euclio/vim-markdown-composer'
-" Plug 'airblade/vim-gitgutter'
-
-" Not entirely sure how I feel about this one.
-" Highlighting is better than haskell-vim, but lots of bad defaults that
-" cannot be configured. Lint is less clear than ghc-mod.
-" Plug 'dag/vim2hs', { 'for': 'haskell' }
-
-call plug#end()
-
-" }}}
-
-" Fish compatible ----------------------------------------------------- {{{
-
-set shell=/bin/sh
-
-" " }}}
+source ~/.config/nvim/plugins.vim " Import and tweak plugins
 
 " Basic options ------------------------------------------------------- {{{
 "
 " Most of this is probably not required with nvim
+" TODO: clean up
 
+set shell=/bin/sh   " Fish compatible
 set title           " Change the terminal title
-set showcmd         " count highlighted
-set ruler           " Show where I am in the command area
-set colorcolumn=75  " vertical ruler at 75 characters
-set textwidth=75    " Wrap at 75 columns
-set laststatus=2    " always show the status line
-                    " ↪ (0 = never, 1 = default [multi-window only])
+" set showcmd         " count highlighted TODO: remove, neovim default
+" set ruler           " Show where I am in the command area TODO: remove, neovim default
+set colorcolumn=81  " vertical ruler at 81 characters
+set textwidth=80    " Wrap at 80 columns
+" set laststatus=2    " always show the status line
+"                     " ↪ (0 = never, 1 = default [multi-window only])
+"                     TODO: remove laststatus, neovim default
 
 set noml            " Don't read first/last lines of file for settings
 set hidden          " Stash unwritten files in buffer
 set vb              " Don't beep at me
 set cursorline      " Highlight current line
 set scrolloff=3     " Start scrolling when I'm 3 lines from top/bottom
-set history=10000   " Remember commands and search history
-set backspace=2     " Backspace over indent, eol, and insert
+" set history=10000   " Remember commands and search history TODO: remove, neovim default
+" set backspace=2     " Backspace over indent, eol, and insert TODO: remove, neovim default
 
 set number          " Show linenumbers
 set nowrap          " Turn off linewrap
@@ -104,25 +32,25 @@ set expandtab       " Expand tabs to spaces
 " hs   -> 2
 " C    -> 8?
 " rest -> 4
-set tabstop=2       " 8 spaces
-set shiftwidth=2    " 8 spaces
-set softtabstop=2   " 8 spaces
+set tabstop=2       " 2 spaces
+set shiftwidth=2    " 2 spaces
+set softtabstop=2   " 2 spaces
 
 set ignorecase      " when searching
 set smartcase       " …unless I use an uppercase character
 
 set showmatch       " show matching brackets
-set mat=2
+set matchtime=2     " 
 
 syntax sync minlines=256 " Makes big files slow
 set synmaxcol=2048  " Also long lines are slow
 
-set autoindent      " Indent
-set smartindent     " Do your best
+" set autoindent      " Indent TODO: remove, neovim-default
+set smartindent     " Do your best TODO: needed?
 
-set fileformats=unix,dos,mac
+set fileformats=unix,dos,mac      " TODO: whia is this?
 
-set undodir^=~/.config/nvim/undo/ " Places .un~ files in the correct directory
+" set undodir^=~/.config/nvim/undo/ " Places .un~ files in the correct directory TODO: remove, neovim default
 set undofile
 set undolevels=10000  " max number of changes that can be undone
 set undoreload=100000 " max number lines to save for undo
@@ -144,73 +72,6 @@ set inccommand=nosplit
 
 " }}}
 
-" Plugin options ------------------------------------------------------ {{{
-
-" Use deoplete
-let g:deoplete#enable_at_startup = 1
-
-" Start completing after two char
-let g:deoplete#auto_completion_start_length = 2
-
-" Have types in neco-ghc -- this slows up things a bit. Use 0 for faster.
-let g:necoghc_enable_detailed_browse = 1
-
-" " <C-h>, <BS>: close popup and delete backword char.
-" inoremap <expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
-" inoremap <expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
-" 
-" " <CR>: close popup and save indent.
-" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-" function! s:my_cr_function() abort
-"   return deoplete#mappings#close_popup() . "\<CR>"
-" endfunction
-
-" Neomake after each write.
-autocmd! BufWritePost * Neomake
-
-" Open fix list when found.
-let g:neomake_open_list = 2
-
-" NERD Tree on launch
-autocmd vimenter * NERDTree
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-
-" Close if last window is a NERD Tree window
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-source ~/.config/nvim/hasktags.vim
-
-" Haskell-vim indentation
-let g:haskell_indent_where = 2
-
-" Use Skim to work with VimTeX
-let g:vimtex_view_general_viewer
-      \ = '/Applications/Skim.app/Contents/SharedSupport/displayline'
-let g:vimtex_view_general_options = '-r @line @pdf @tex'
-
-" This adds a callback hook that updates Skim after compilation
-let g:vimtex_latexmk_callback_hooks = ['UpdateSkim']
-function! UpdateSkim(status)
-  if !a:status | return | endif
-
-  let l:out = b:vimtex.out()
-  let l:tex = expand('%:p')
-  let l:cmd = [g:vimtex_view_general_viewer, '-r']
-  if !empty(system('pgrep Skim'))
-    call extend(l:cmd, ['-g'])
-  endif
-  if has('nvim')
-    call jobstart(l:cmd + [line('.'), l:out, l:tex])
-  elseif has('job')
-    call job_start(l:cmd + [line('.'), l:out, l:tex])
-  else
-    call system(join(l:cmd + [line('.'), shellescape(l:out), shellescape(l:tex)], ' '))
-  endif
-endfunction
-
-" }}}
-
 " Colorscheme ----------------------------------------------------------{{{
 
 colorscheme solarized
@@ -229,7 +90,7 @@ let g:solarized_termcolors      = 16 " 16 if Solarized is the colorscheme
 " TODO: can I remove the let?
 let s:uname = system("uname")
 if s:uname == "Darwin\n"
-  set clipboard=unnamed
+  set clipboard=unnamed   " TODO: what does this do exactly?
 endif
 
 " }}}
@@ -289,11 +150,4 @@ function! NumberToggle()
 endfunc
 
 nnoremap <leader>n :call NumberToggle()<cr>
-
-" terminal sanity
-
-tnoremap <Esc> <C-\><C-n> 
-
-let g:neoterm_size = 10
-
 " }}}
