@@ -2,26 +2,16 @@ source ~/.config/nvim/plugins.vim " Import and tweak plugins
 
 " Basic options ------------------------------------------------------- {{{
 "
-" Most of this is probably not required with nvim
-" TODO: clean up
-
 set shell=/bin/sh   " Fish compatible
 set title           " Change the terminal title
-" set showcmd         " count highlighted TODO: remove, neovim default
-" set ruler           " Show where I am in the command area TODO: remove, neovim default
+set cursorline      " Highlight current line
 set colorcolumn=81  " vertical ruler at 81 characters
 set textwidth=80    " Wrap at 80 columns
-" set laststatus=2    " always show the status line
-"                     " ↪ (0 = never, 1 = default [multi-window only])
-"                     TODO: remove laststatus, neovim default
 
-set noml            " Don't read first/last lines of file for settings
+set nomodeline      " Don't read first/last lines of file for settings
 set hidden          " Stash unwritten files in buffer
-set vb              " Don't beep at me
-set cursorline      " Highlight current line
+set visualbell      " Don't beep at me
 set scrolloff=3     " Start scrolling when I'm 3 lines from top/bottom
-" set history=10000   " Remember commands and search history TODO: remove, neovim default
-" set backspace=2     " Backspace over indent, eol, and insert TODO: remove, neovim default
 
 set number          " Show linenumbers
 set nowrap          " Turn off linewrap
@@ -45,13 +35,12 @@ set matchtime=2     "
 syntax sync minlines=256 " Makes big files slow
 set synmaxcol=2048  " Also long lines are slow
 
-" set autoindent      " Indent TODO: remove, neovim-default
-set smartindent     " Do your best TODO: needed?
+set smartindent     " Auto-indent new lines
+                    " TODO: should see if plugins are not taking care of this
 
-set fileformats=unix,dos,mac      " TODO: whia is this?
+" set fileformats=unix,dos,mac " TODO: remove, default options should be OK
 
-" set undodir^=~/.config/nvim/undo/ " Places .un~ files in the correct directory TODO: remove, neovim default
-set undofile
+set undofile          " Save undos after closing files
 set undolevels=10000  " max number of changes that can be undone
 set undoreload=100000 " max number lines to save for undo
                       " on buffer reload
@@ -65,7 +54,7 @@ set completeopt+=longest
 set guifont=Source\ Code\ Pro\ 14 " GUI font
 
 " Yell for long lines
-au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>75v.\+', -1)
+au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
 " Preview :s
 set inccommand=nosplit
