@@ -1,4 +1,9 @@
-source ~/.config/nvim/plugins.vim " Import and tweak plugins
+" Import and tweak plugins
+"
+let $PLUGINS_VIM=expand("~/.config/nvim/plugins.vim")
+if filereadable($PLUGINS_VIM)
+    source $PLUGINS_VIM
+endif
 
 " Basic options ------------------------------------------------------- {{{
 "
