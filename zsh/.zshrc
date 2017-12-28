@@ -13,15 +13,16 @@ fi
 
 # TODO: this is imported from the Prezto config files I used to use.
 #       It would probably be a good idea to go through and see which one I like.
-# zplug "modules/environment",  from:prezto
-# zplug "modules/terminal",     from:prezto
-# zplug "modules/editor",       from:prezto
-# zplug "modules/history",      from:prezto
-# zplug "modules/directory",    from:prezto
-# zplug "modules/spectrum",     from:prezto
-# zplug "modules/utility",      from:prezto
-# zplug "modules/completion",   from:prezto
-zplug "modules/prompt",       from:prezto
+zplug "modules/environment",  from:prezto
+zplug "modules/terminal",     from:prezto
+zplug "modules/editor",       from:prezto
+zplug "modules/history",      from:prezto
+zplug "modules/directory",    from:prezto
+zplug "modules/spectrum",     from:prezto
+zplug "modules/utility",      from:prezto
+zplug "modules/completion",   from:prezto
+zplug "modules/prompt",       from:prezto, \
+			      hook-build:"ln -sf $HOME/.config/zsh/prompt_elisa_setup $ZPLUG_HOME/repos/sorin-ionescu/prezto/modules/prompt/functions"
 
 zplug load
 
