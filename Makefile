@@ -54,9 +54,7 @@ CASKS+=wireshark
 
 homebrew: /usr/local/bin/brew
 
-cask: /usr/local/bin/brew-cask.rb
-
-casks: cask $(CASKS:%=cask-%)
+casks: $(CASKS:%=cask-%)
 
 brews: homebrew $(BREWS:%=brew-%)
 
@@ -70,7 +68,7 @@ brewremove-%: homebrew
 	-@brew uninstall $*
 	@echo "Done."
 
-cask-%: cask
+cask-%:
 	@echo "Brew-cask: installing $*..."
 	-@brew cask install $*
 	@echo "Done."
