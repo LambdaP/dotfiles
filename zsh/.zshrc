@@ -21,8 +21,9 @@ zplug "modules/directory",    from:prezto
 zplug "modules/spectrum",     from:prezto
 zplug "modules/utility",      from:prezto
 zplug "modules/completion",   from:prezto
-zplug "modules/prompt",       from:prezto, \
-			      hook-build:"ln -sf $HOME/.config/zsh/prompt_elisa_setup $ZPLUG_HOME/repos/sorin-ionescu/prezto/modules/prompt/functions"
+zplug "modules/prompt",       from:prezto #, \
+			      # hook-build:"ln -sf $HOME/.config/zsh/prompt_elisa_setup $ZPLUG_HOME/repos/sorin-ionescu/prezto/modules/prompt/functions"
+            # FIXME: that hook fails, and the module does not get loaded.
 
 zplug load
 
