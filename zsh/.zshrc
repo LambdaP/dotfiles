@@ -29,6 +29,8 @@ zplug load
 
 ## Configure zsh
 
+alias vi=nvim
+
 # Source local configuration files
 source ~/.config/zsh/path.config
 source ~/.config/zsh/alias.config
