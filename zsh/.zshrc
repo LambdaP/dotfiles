@@ -36,5 +36,18 @@ source ~/.config/zsh/path.config
 source ~/.config/zsh/alias.config
 source ~/.config/zsh/zsh_mac.config
 
+# TMUX
+if which tmux >/dev/null 2>&1; then
+    #if not inside a tmux session, and if no session is started, start a new session
+    if [[ -z "$TMUX" ]] then;
+       if tmux has-session; then
+         tmux attach
+       else
+         tmux new-session
+       fi
+    fi
+fi
+
+
 ## Load prompt
 prompt elisa

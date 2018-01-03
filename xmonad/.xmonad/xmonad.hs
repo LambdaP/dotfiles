@@ -28,7 +28,8 @@ import qualified Data.Map        as M
 -- certain contrib modules.
 --
 -- myTerminal = "urxvt -e /usr/bin/zsh -c \"exec tmux attach-session -d\""
-myTerminal = "urxvt"
+-- myTerminal = "urxvt"
+myTerminal = "alacritty"
 
 -- The command to lock the screen or show the screensaver.
 myScreensaver = "/usr/bin/gnome-screensaver-command --lock"
