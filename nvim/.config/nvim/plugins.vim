@@ -2,15 +2,9 @@
 "
 " Neovim plugins and options
 
-" Vim-plug configuration
+"" Vim-plug
 
 call plug#begin()
-
-" Linter
-Plug 'w0rp/ale'
-
-" Handy terminal.
-Plug 'kassio/neoterm'
 
 " My favorite colorscheme.
 Plug 'altercation/vim-colors-solarized'
@@ -26,8 +20,8 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 " Show local tags.
 Plug 'majutsushi/tagbar'
 
-" Asynchronous :make, awesome checker.
-" Plug 'benekastah/neomake'
+" Linter
+Plug 'w0rp/ale'
 
 " Vim motions on speed
 Plug 'easymotion/vim-easymotion'
@@ -36,6 +30,11 @@ Plug 'easymotion/vim-easymotion'
 " Requires neovim-python.
 " See: https://neovim.io/doc/user/nvim_python.html
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/neco-syntax'
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 
 Plug 'Shougo/echodoc.vim'
 
@@ -51,20 +50,22 @@ Plug 'wting/rust.vim', { 'for': 'rust' }
 " Purescript syntax highlighting.
 Plug 'raichoo/purescript-vim', { 'for': 'purescript' }
 
-" Run ghcid in nvim
-Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim', 'for': 'haskell' }
-" Haskell autocompletion (works with deoplete, YCM, omni)
-Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
-" Haskell syntax highlighting
-Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
-" Vim Haskell search.
-Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
-" Prettify Haskell code.
-Plug 'nbouscal/vim-stylish-haskell', { 'for': 'haskell' }
-" Crazy Haskell concealing.
-" Plug 'enomsg/vim-haskellConcealPlus'
+""" Haskell
 
-" Support for writing LaTeX documents
+" Ghcid
+Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim', 'for': 'haskell'}
+" Interactive development
+"   TODO: look into keeping this
+" Plug 'parsonsmatt/intero-neovim', { 'for': 'haskell' }
+" Hoogle
+Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
+" Haskell autocompletion (works with deoplete, YCM, omni), requires ghc-mod
+"   as of 2018-08-31, ghc-mod is not compatible with the last two releases of
+"   GHC, so using this is awkward.
+" Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
+
+""" Latex
+"
 Plug 'lervag/vimtex', { 'for': ['tex', 'latex'] }
 Plug 'rhysd/vim-grammarous', { 'for': ['tex', 'latex'] }
 Plug 'dbmrq/vim-ditto', { 'for': ['tex', 'latex'] }
@@ -78,16 +79,13 @@ Plug 'reedes/vim-wordy', { 'for': ['tex', 'latex'] }
 " Plug 'euclio/vim-markdown-composer'
 " Plug 'airblade/vim-gitgutter'
 
-" Not entirely sure how I feel about this one.
-" Highlighting is better than haskell-vim, but lots of bad defaults that
-" cannot be configured. Lint is less clear than ghc-mod.
-" Plug 'dag/vim2hs', { 'for': 'haskell' }
-
 call plug#end()
 
 "" Plugin options
 
-" Use deoplete
+""" Deoplete
+
+" Enable
 let g:deoplete#enable_at_startup = 1
 
 " Start completing after two char
@@ -99,18 +97,18 @@ let g:necoghc_enable_detailed_browse = 1
 " " <C-h>, <BS>: close popup and delete backword char.
 " inoremap <expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
 " inoremap <expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
-" 
+"
 " " <CR>: close popup and save indent.
 " inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 " function! s:my_cr_function() abort
 "   return deoplete#mappings#close_popup() . "\<CR>"
 " endfunction
 
-" Neomake after each write.
-" autocmd! BufWritePost * Neomake
+"""
 
-" Open fix list when found.
-let g:neomake_open_list = 2
+let g:ghcid_command = 'stack exec -- ghcid -c "stack ghci"'
+
+""" NERD Tree
 
 " NERD Tree on launch
 autocmd vimenter * NERDTree
@@ -125,21 +123,47 @@ if filereadable($HASKTAGS_VIM)
     source $HASKTAGS_VIM
 endif
 
-" ALE Haskell linters
-"
-" Default linters include 'stack-ghc' and 'ghc-mod' on top of those below.
-" ALE isn't capable of seeing project-defined names, leading to annoying
-" error messages.
-" This is a very heavy way of shitting them up.
-" TODO: investigate a lighter way to accomplish this, without turning the
-"       linter off entirely.
+""" ALE
 
-let g:ale_linters ={
-      \   'haskell': ['hlint', 'hdevtools', 'hfmt'],
-      \}
+" Note on using ALE and Stack:
+" ALE checks that binaries are valid before running them.
+" Because of this, we cannot simply do e.g.
+"   let g:ale_haskell_hfmt_executable = 'stack exec -- hfmt'.
+"
+" A possible solution to make ALE use stack exec is to pass 'stack' to the
+" executable path and 'exec -- linter' as an option, but e.g., there isn't a
+" variable for passing options to hfmt.
+"
+" Until there is a workaround in ALE itself, the linters and fixers to be used
+" with ALE need to be instlled with stack install.
+
+let g:ale_fix_on_save = 1
+
+let g:ale_fixers = {
+  \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+  \   'haskell': ['hfmt'],
+  \}
+
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_delay = 0
+
+let g:ale_linters = {
+  \   'haskell': ['hlint', 'hdevtools', 'stack-build'],
+  \   'latex':   ['vale'],
+  \}
+
+" Automatically open loclist
+" let g:ale_open_list = 1
+
+" Auto-close loclist when leaving buffer
+augroup CloseLoclistWindowGroup
+  autocmd!
+  autocmd QuitPre * if empty(&buftype) | lclose | endif
+augroup END
 
 " Haskell-vim indentation
-let g:haskell_indent_where = 2
+" let g:haskell_indent_where = 2
 
 " Let vim-airline convey ALE info
 let g:airline#extensions#ale#enabled = 1
@@ -174,6 +198,68 @@ endfunction
 
 " terminal sanity
 
-tnoremap <Esc> <C-\><C-n> 
+tnoremap <Esc> <C-\><C-n>
 
-let g:neoterm_size = 10
+" augroup interoMaps
+"   au!
+"   " Maps for intero. Restrict to Haskell buffers so the bindings don't collide.
+"
+"   " Background process and window management
+"   au FileType haskell nnoremap <silent> <leader>is :InteroStart<CR>
+"   au FileType haskell nnoremap <silent> <leader>ik :InteroKill<CR>
+"
+"   " Open intero/GHCi split horizontally
+"   au FileType haskell nnoremap <silent> <leader>io :InteroOpen<CR>
+"   " Open intero/GHCi split vertically
+"   au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H
+"   au FileType haskell nnoremap <silent> <leader>ih :InteroHide<CR>
+"
+"   " Reloading (pick one)
+"   " Automatically reload on save
+"   au BufWritePost *.hs InteroReload
+"
+"   " Load individual modules
+"   au FileType haskell nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
+"   au FileType haskell nnoremap <silent> <leader>if :InteroLoadCurrentFile<CR>
+"
+"   " Type-related information
+"   " Heads up! These next two differ from the rest.
+"   au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
+"   au FileType haskell map <silent> <leader>T <Plug>InteroType
+"   au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
+"
+"   " Navigation
+"   au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
+"
+"   " Managing targets
+"   " Prompts you to enter targets (no silent):
+"   au FileType haskell nnoremap <leader>ist :InteroSetTargets<SPACE>
+" augroup END
+"
+" Enable type information on hover (when holding cursor at point for ~1 second).
+" let g:intero_type_on_hover = 1
+"
+" " Change the intero window size; default is 10.
+" let g:intero_window_size = 15
+"
+" OPTIONAL: Make the update time shorter, so the type info will trigger faster.
+" set updatetime=1000
+
+
+
+
+
+
+" Required for operations modifying multiple buffers like rename.
+set hidden
+
+"let g:LanguageClient_serverCommands = {
+"    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+"    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+"    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+"    \ 'python': ['/usr/local/bin/pyls'],
+"    \ }
+
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
