@@ -48,18 +48,20 @@ function prompt_elisa_battery {
       # Pre-Grep as much information as possible to save some memory and
       # avoid pollution of the xtrace output.
       local raw_data="$(ioreg -n AppleSmartBattery | grep -E "MaxCapacity|TimeRemaining|CurrentCapacity|ExternalConnected|IsCharging")"
-        
+
       # Chech whether there is a battery on the system
       if [[ -n $(echo $raw_data | grep MaxCapacity) ]]; then
         # Get charge values
-        local max_capacity=$(echo $raw_data | grep MaxCapacity | awk '{ print $5 }')
-        local current_capacity=$(echo $raw_data | grep CurrentCapacity | awk '{ print $5 }')
+        typeset -i 10 maxcapacity
+        local max_capacity=$(echo $raw_data | grep \"MaxCapacity\" | awk '{ print $5 }')
+        typeset -i 10 current_capacity
+        local current_capacity=$(echo $raw_data | grep \"CurrentCapacity\" | awk '{ print $5 }')
 
         local is_charging=$(echo $raw_data | grep IsCharging | awk '{ print $5 }')
 
         if [[ -n "$max_capacity" && -n "$current_capacity" ]]; then
           typeset -i 10 bat_percent
-          bat_percent=$(( (current_capacity * 100) / max_capacity ))
+          bat_percent=$(( (${current_capacity} * 100) / ${max_capacity} ))
         fi
       fi
     fi
@@ -71,7 +73,7 @@ function prompt_elisa_battery {
     typeset -i 10 charged
     local charged=$((bat_percent / 10))
     local non_charged=$((10 - charged))
-    
+
     local full=${(l:${charged}::▸:)}
     local empty=${(l:${non_charged}::▹:)}
 
