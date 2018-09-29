@@ -1,0 +1,8 @@
+templates:
+  params:
+   author-name: Patrick Lambein
+   author-email: patrick@lambein.name
+   github-username: LambdaP
+   # nix:
+   #   enable: true
+   #   packages: [glpk, pcre]

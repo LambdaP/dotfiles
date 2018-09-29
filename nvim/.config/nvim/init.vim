@@ -10,8 +10,8 @@ endif
 set shell=/bin/sh   " Fish compatible
 set title           " Change the terminal title
 set cursorline      " Highlight current line
-set colorcolumn=81  " vertical ruler at 81 characters
-set textwidth=80    " Wrap at 80 columns
+set colorcolumn=80  " vertical ruler at 81 characters
+set textwidth=79    " Wrap at 80 columns
 
 set nomodeline      " Don't read first/last lines of file for settings
 set hidden          " Stash unwritten files in buffer
@@ -35,7 +35,7 @@ set ignorecase      " when searching
 set smartcase       " …unless I use an uppercase character
 
 set showmatch       " show matching brackets
-set matchtime=2     " 
+set matchtime=2     "
 
 syntax sync minlines=256 " Makes big files slow
 set synmaxcol=2048  " Also long lines are slow

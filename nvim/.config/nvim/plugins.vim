@@ -6,16 +6,27 @@
 
 call plug#begin()
 
+" Start screen
+Plug 'mhinz/vim-startify'
+
+" Easily work with brackets etc.
+Plug 'tpope/vim-surround'
+
+" Toggle comments
+Plug 'tpope/vim-commentary'
+
 " My favorite colorscheme.
 Plug 'altercation/vim-colors-solarized'
 
 " Thank you for flying neovim.
 Plug 'bling/vim-airline'
 
+" Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+
 " Filesystem explorer.
 Plug 'scrooloose/nerdtree'
 " NERDtree git integration.
-Plug 'Xuyuanp/nerdtree-git-plugin'
+" Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Show local tags.
 Plug 'majutsushi/tagbar'
@@ -111,9 +122,14 @@ let g:ghcid_command = 'stack exec -- ghcid -c "stack ghci"'
 """ NERD Tree
 
 " NERD Tree on launch
-autocmd vimenter * NERDTree
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" autocmd vimenter * NERDTree
+" autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter *
+            \   if !argc()
+            \ |   Startify
+            \ |   NERDTree
+            \ |   wincmd w
+            \ | endif
 
 " Close if last window is a NERD Tree window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -142,6 +158,7 @@ let g:ale_fix_on_save = 1
 let g:ale_fixers = {
   \   '*': ['remove_trailing_lines', 'trim_whitespace'],
   \   'haskell': ['hfmt'],
+  \   'rust':    ['rustfmt'],
   \}
 
 let g:ale_lint_on_text_changed = 'normal'
@@ -151,6 +168,7 @@ let g:ale_lint_delay = 0
 let g:ale_linters = {
   \   'haskell': ['hlint', 'hdevtools', 'stack-build'],
   \   'latex':   ['vale'],
+  \   'rust':    ['rustc'],
   \}
 
 " Automatically open loclist
@@ -161,9 +179,6 @@ augroup CloseLoclistWindowGroup
   autocmd!
   autocmd QuitPre * if empty(&buftype) | lclose | endif
 augroup END
-
-" Haskell-vim indentation
-" let g:haskell_indent_where = 2
 
 " Let vim-airline convey ALE info
 let g:airline#extensions#ale#enabled = 1
@@ -263,3 +278,8 @@ set hidden
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+let g:netrw_keepdir= 0
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_sort_options = 'i'
