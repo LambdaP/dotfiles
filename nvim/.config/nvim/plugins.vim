@@ -32,20 +32,25 @@ Plug 'scrooloose/nerdtree'
 Plug 'majutsushi/tagbar'
 
 " Linter
-Plug 'w0rp/ale'
+Plug 'desmap/ale-sensible' | Plug 'w0rp/ale'
 
 " Vim motions on speed
 Plug 'easymotion/vim-easymotion'
 
+Plug 'mbbill/undotree'
+
 " Dark powered neo-completion.
 " Requires neovim-python.
 " See: https://neovim.io/doc/user/nvim_python.html
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/neco-syntax'
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'Shougo/neco-syntax'
+
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
+
+Plug 'junegunn/fzf'
 
 Plug 'Shougo/echodoc.vim'
 
@@ -61,6 +66,10 @@ Plug 'wting/rust.vim', { 'for': 'rust' }
 " Purescript syntax highlighting.
 Plug 'raichoo/purescript-vim', { 'for': 'purescript' }
 
+Plug 'jceb/vim-orgmode'
+
+Plug 'jiangmiao/auto-pairs'
+
 """ Haskell
 
 " Ghcid
@@ -70,10 +79,7 @@ Plug 'ndmitchell/ghcid', { 'rtp': 'plugins/nvim', 'for': 'haskell'}
 " Plug 'parsonsmatt/intero-neovim', { 'for': 'haskell' }
 " Hoogle
 Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
-" Haskell autocompletion (works with deoplete, YCM, omni), requires ghc-mod
-"   as of 2018-08-31, ghc-mod is not compatible with the last two releases of
-"   GHC, so using this is awkward.
-" Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
+Plug 'neovimhaskell/haskell-vim'
 
 """ Latex
 "
@@ -82,6 +88,9 @@ Plug 'rhysd/vim-grammarous', { 'for': ['tex', 'latex'] }
 Plug 'dbmrq/vim-ditto', { 'for': ['tex', 'latex'] }
 Plug 'reedes/vim-wordy', { 'for': ['tex', 'latex'] }
 
+""" Python
+
+Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 
 " TODO: look into those.
 " Plug 'vim-pandoc/vim-pandoc'
@@ -157,8 +166,9 @@ let g:ale_fix_on_save = 1
 
 let g:ale_fixers = {
   \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-  \   'haskell': ['hfmt'],
+  \   'haskell': ['hfmt', 'brittany'],
   \   'rust':    ['rustfmt'],
+  \   'python':  ['yapf'],
   \}
 
 let g:ale_lint_on_text_changed = 'normal'
@@ -169,6 +179,7 @@ let g:ale_linters = {
   \   'haskell': ['hlint', 'hdevtools', 'stack-build'],
   \   'latex':   ['vale'],
   \   'rust':    ['rustc'],
+  \   'python':  ['pylint'],
   \}
 
 " Automatically open loclist
@@ -185,6 +196,40 @@ let g:airline#extensions#ale#enabled = 1
 
 " Auto-use indent guides
 let g:indent_guides_enable_on_vim_startup = 1
+
+" TeX options
+"
+let g:tex_flavor = 'latex' " Do not mistake .tex files for plain TeX
+
+" VimTeX options
+
+" NOTE: from :h vimtex-faq-neovim:
+" Q: Does vimtex work with neovim?
+" A: Yes. Since 2018-11-18 [0], most features work out of the box. However, for
+"    backward search from PDF viewer to neovim, one needs the neovim-remote
+"    tool as described below.
+"
+"    Deprecated: The compiler coupling and some of the viewer functionality
+"    require the --remote options from the clientserver. For some reason,
+"    these options have been removed from neovim, see #1750 [1]. There does
+"    remain some hope that the options will be reimplemented sometime in the
+"    future.
+"
+"    In the meantime, there exists a workaround: neovim-remote [2] is a simple
+"    tool that implements the --remote options through a python script. If one
+"    downloads this tool and sets the option g:vimtex_compiler_progname to
+"    nvr (or the full path, if nvr is not in $PATH), then everything
+"    should work.
+"
+"    [0]: https://github.com/lervag/vimtex/issues/1258
+"    [1]: https://github.com/neovim/neovim/issues/1750
+"    [2]: https://github.com/lervag/vimtex/issues/262
+"
+" NOTE: if used with Skim, the following should be set in Skim:
+"       Preferences -> Sync -> Command = "nvr"
+"       Preferences -> Sync -> Arguments = "--remote-silent %f -c %l"
+"       (quotes omitted in Skim)
+let g:vimtex_compiler_progname = 'nvr'
 
 " Use Skim to work with VimTeX
 let g:vimtex_view_general_viewer
@@ -215,66 +260,17 @@ endfunction
 
 tnoremap <Esc> <C-\><C-n>
 
-" augroup interoMaps
-"   au!
-"   " Maps for intero. Restrict to Haskell buffers so the bindings don't collide.
-"
-"   " Background process and window management
-"   au FileType haskell nnoremap <silent> <leader>is :InteroStart<CR>
-"   au FileType haskell nnoremap <silent> <leader>ik :InteroKill<CR>
-"
-"   " Open intero/GHCi split horizontally
-"   au FileType haskell nnoremap <silent> <leader>io :InteroOpen<CR>
-"   " Open intero/GHCi split vertically
-"   au FileType haskell nnoremap <silent> <leader>iov :InteroOpen<CR><C-W>H
-"   au FileType haskell nnoremap <silent> <leader>ih :InteroHide<CR>
-"
-"   " Reloading (pick one)
-"   " Automatically reload on save
-"   au BufWritePost *.hs InteroReload
-"
-"   " Load individual modules
-"   au FileType haskell nnoremap <silent> <leader>il :InteroLoadCurrentModule<CR>
-"   au FileType haskell nnoremap <silent> <leader>if :InteroLoadCurrentFile<CR>
-"
-"   " Type-related information
-"   " Heads up! These next two differ from the rest.
-"   au FileType haskell map <silent> <leader>t <Plug>InteroGenericType
-"   au FileType haskell map <silent> <leader>T <Plug>InteroType
-"   au FileType haskell nnoremap <silent> <leader>it :InteroTypeInsert<CR>
-"
-"   " Navigation
-"   au FileType haskell nnoremap <silent> <leader>jd :InteroGoToDef<CR>
-"
-"   " Managing targets
-"   " Prompts you to enter targets (no silent):
-"   au FileType haskell nnoremap <leader>ist :InteroSetTargets<SPACE>
-" augroup END
-"
-" Enable type information on hover (when holding cursor at point for ~1 second).
-" let g:intero_type_on_hover = 1
-"
-" " Change the intero window size; default is 10.
-" let g:intero_window_size = 15
-"
-" OPTIONAL: Make the update time shorter, so the type info will trigger faster.
-" set updatetime=1000
-
-
-
-
-
-
 " Required for operations modifying multiple buffers like rename.
 set hidden
 
-"let g:LanguageClient_serverCommands = {
-"    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-"    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-"    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-"    \ 'python': ['/usr/local/bin/pyls'],
-"    \ }
+let g:LanguageClient_rootMarkers = ['*.cabal', 'stack.yaml']
+let g:LanguageClient_serverCommands = {
+    \ 'rust':     ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'haskell':  ['ghcide', '--lsp'],
+    \ 'python':   ['/usr/local/bin/pyls']
+    \ }
 
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
@@ -283,3 +279,13 @@ let g:netrw_keepdir= 0
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_sort_options = 'i'
+
+let g:tex_flavor = 'latex'
+
+let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
