@@ -36,3 +36,5 @@ source ~/.config/zsh/zsh_mac.config
 
 ## Load prompt
 prompt elisa
+
+export CUPS_USER=plambein # to use printers @ INRIA
