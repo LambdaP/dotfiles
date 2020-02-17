@@ -48,11 +48,13 @@ This function should only modify configuration layer settings."
      git
      markdown
      org
-     osx
+     ;; Don't bind alt to meta
+     (osx :variables osx-use-option-as-meta nil)
      latex
      bibtex
      haskell
      treemacs
+     org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -83,7 +85,8 @@ This function should only modify configuration layer settings."
    ;; installs only the used packages but won't delete unused ones. `all'
    ;; installs *all* packages supported by Spacemacs and never uninstalls them.
    ;; (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'used-only
+   ))
 
 (defun dotspacemacs/init ()
   "Initialization:
@@ -212,7 +215,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-default-font '("Source Code Pro"
                                :size 13.0
                                :weight normal
-                               :width normal)
+                               :width normal
+                               :powerline-scale 1.1)
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
 
