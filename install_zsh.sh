@@ -11,8 +11,9 @@ fi
 
 # Symlink zsh config files
 mkdir -p $ZSH_CONFIG_DIR
-stow -v zsh --target=$HOME
-stow -v zsh --target=$HOME --dir=$DOTFILES/local
+stow -v zsh      --target=$HOME
+stow -v zsh      --target=$HOME --dir=$DOTFILES/local
+stow -v starship --target=$HOME
 
 # Install zplug
 
