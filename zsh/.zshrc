@@ -21,7 +21,7 @@ zplug "modules/directory",    from:prezto
 zplug "modules/spectrum",     from:prezto
 zplug "modules/utility",      from:prezto
 zplug "modules/completion",   from:prezto
-zplug "modules/prompt",       from:prezto #, \
+# zplug "modules/prompt",       from:prezto #, \
 			      # hook-build:"ln -sf $HOME/.config/zsh/prompt_elisa_setup $ZPLUG_HOME/repos/sorin-ionescu/prezto/modules/prompt/functions"
             # FIXME: that hook fails, and the module does not get loaded.
 
@@ -35,6 +35,27 @@ source ~/.config/zsh/alias.config
 source ~/.config/zsh/zsh_mac.config
 
 ## Load prompt
-prompt elisa
+# prompt elisa
 
 export CUPS_USER=plambein # to use printers @ INRIA
+
+# Use nvim as manpager `:h Man`
+export MANPAGER="nvim +Man! -c ':set signcolumn=' -c ':set colorcolumn=""'"
+export MANWIDTH=999
+
+eval "$(starship init zsh)"
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/usr/local/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
+        . "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh"
+    else
+        export PATH="/usr/local/Caskroom/miniconda/base/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<

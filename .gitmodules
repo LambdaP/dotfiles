@@ -1,9 +1,9 @@
 [submodule "zplug/.zplug"]
 	path = zplug/.zplug
 	url = https://github.com/zplug/zplug
-[submodule "vale/styles/proselint"]
-	path = vale/styles/proselint
-	url = git@github.com:LambdaP/proselint.git
-[submodule "vale/styles/write-good"]
-	path = vale/styles/write-good
+[submodule "vale/.config/vale/write-good"]
+	path = vale/.config/vale/styles/write-good
 	url = git@github.com:LambdaP/write-good.git
+[submodule "vale/.config/vale/proselint"]
+	path = vale/.config/vale/styles/proselint
+	url = git@github.com:LambdaP/proselint.git

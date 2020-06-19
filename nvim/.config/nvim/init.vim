@@ -1,17 +1,18 @@
+scriptencoding utf-8
+
 " Import and tweak plugins
-"
-let $PLUGINS_VIM=expand("~/.config/nvim/plugins.vim")
+let $PLUGINS_VIM=expand('~/.config/nvim/plugins.vim')
 if filereadable($PLUGINS_VIM)
     source $PLUGINS_VIM
 endif
 
 " Basic options ------------------------------------------------------- {{{
-"
+
 set shell=/bin/sh   " Fish compatible
 set title           " Change the terminal title
 set cursorline      " Highlight current line
-set colorcolumn=80  " vertical ruler at 81 characters
-set textwidth=79    " Wrap at 80 columns
+set textwidth=79    " Wrap at 79 columns
+set colorcolumn=+1  " vertical ruler after textwidth
 
 set nomodeline      " Don't read first/last lines of file for settings
 set hidden          " Stash unwritten files in buffer
@@ -35,11 +36,13 @@ set ignorecase      " when searching
 set smartcase       " …unless I use an uppercase character
 
 set showmatch       " show matching brackets
-set matchtime=2     "
+set matchtime=2
 
+" TODO: what are these
 syntax sync minlines=256 " Makes big files slow
 set synmaxcol=2048  " Also long lines are slow
 
+set autoindent
 set smartindent     " Auto-indent new lines
                     " TODO: should see if plugins are not taking care of this
 
@@ -59,7 +62,8 @@ set completeopt+=longest
 set guifont=Source\ Code\ Pro\ 14 " GUI font
 
 " Yell for long lines
-au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>80v.\+', -1)
+" TODO: revisit
+" au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
 " Preview :s
 set inccommand=nosplit
@@ -72,8 +76,8 @@ colorscheme solarized
 
 set background=dark
 
-let g:solarized_visibility      = "high"
-let g:solarized_contrast        = "high"
+let g:solarized_visibility      = 'high'
+let g:solarized_contrast        = 'high'
 let g:solarized_termcolors      = 16 " 16 if Solarized is the colorscheme
                                      " of iTerm2, 256 otherwise
 
@@ -82,8 +86,8 @@ let g:solarized_termcolors      = 16 " 16 if Solarized is the colorscheme
 " Dumb osx ------------------------------------------------------------ {{{
 
 " TODO: can I remove the let?
-let s:uname = system("uname")
-if s:uname == "Darwin\n"
+let s:uname = system('uname')
+if s:uname == 'Darwin\n'
   set clipboard=unnamed   " TODO: what does this do exactly?
 endif
 
@@ -91,7 +95,20 @@ endif
 
 " Convenient Mapping--------------------------------------------------- {{{
 
-let mapleader=","
+let mapleader=','
+
+" disable Ex mode, format text instead
+map  Q gq
+map gQ gq
+
+" use '<', '>' instead of '[', ']', hard to access on a French keyboard.
+" suggested by Tim Pope in https://github.com/tpope/vim-unimpaired
+nmap < [
+nmap > ]
+omap < [
+omap > ]
+xmap < [
+xmap > ]
 
 " Make regex sane
 noremap / /\v
@@ -137,11 +154,20 @@ map <A-S-Right> <C-W>l
 " Toggle line numbers in normal mode.
 function! NumberToggle()
   if(&number == 0)
-    set nu
+    set number
   else
-    set nonu
+    set nonumber
   endif
 endfunc
 
 nnoremap <leader>n :call NumberToggle()<cr>
 " }}}
+
+" The following from: https://github.com/dense-analysis/ale
+"" Put these lines at the very end of your vimrc file.
+" Load all plugins now.
+" Plugins need to be added to runtimepath before helptags can be generated.
+packloadall
+" Load all of the helptags now, after plugins have been loaded.
+" All messages and errors will be ignored.
+silent! helptags ALL
