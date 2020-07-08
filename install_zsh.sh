@@ -1,13 +1,12 @@
 # #!/bin/sh
 
+[ -z ${XDG_CONFIG_HOME+x} ] && XDG_CONFIG_HOME=$HOME/.config
+ZSH_CONFIG_DIR=$XDG_CONFIG_HOME/zsh
+
 DOTFILES=$(pwd)
-ZSH_CONFIG_DIR=$HOME/.config/zsh
 
 # Save previous .zshrc file
-if [ -e ~/.zshrc ]
-then
-	mv ~/.zshrc ~/.zshrc.pre_script
-fi
+[ -e ~/.zshrc ] &&	mv ~/.zshrc ~/.zshrc.pre_script
 
 # Symlink zsh config files
 mkdir -p $ZSH_CONFIG_DIR
