@@ -33,7 +33,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(javascript
      html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -54,7 +54,7 @@ This function should only modify configuration layer settings."
      bibtex
      haskell
      treemacs
-     org
+     (deft :variables deft-zetteldeft t)
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -528,3 +528,61 @@ you should place your code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(deft-directory "/Users/p/org/slipbox")
+ '(deft-extensions (quote ("org" "md" "txt" "tex")))
+ '(deft-new-file-format "%Y%m%d%H%M%S")
+ '(deft-recursive t)
+ '(ns-right-alternate-modifier (quote none))
+ '(org-agenda-files
+   (quote
+    ("~/org/orgfiles/inbox.org" "~/org/orgfiles/gtd.org" "~/org/orgfiles/tickler.org")))
+ '(org-agenda-span (quote fortnight))
+ '(org-agenda-start-on-weekday nil)
+ '(org-agenda-time-leading-zero t)
+ '(org-archive-location ".%s_archive::")
+ '(org-capture-templates
+   (quote
+    (("t" "Todo [inbox]" entry
+      (file+headline "~/org/orgfiles/inbox.org" "Tasks")
+      "* TODO %i%?")
+     ("T" "Tickler" entry
+      (file+headline "~/org/orgfiles/tickler.org" "Tickler")
+      "* %i%? 
+ %U")
+     ("n" "Note" entry
+      (file+headline "~/org/orgfiles/notes.org" "Notes")
+      "* %(format-time-string \"%Y%m%d%H%M%S\")
+
+    %i%?" :prepend t :empty-lines-after 1))))
+ '(org-modules
+   (quote
+    (org-bbdb org-bibtex org-docview org-eww org-gnus org-info org-irc org-mhe org-protocol org-rmail org-w3m)))
+ '(org-refile-targets
+   (quote
+    (("~/org/orgfiles/gtd.org" :maxlevel . 3)
+     ("~/org/orgfiles/someday.org" :level . 1)
+     ("~/org/orgfiles/tickler.org" :maxlevel . 2))))
+ '(org-todo-keywords
+   (quote
+    ((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)"))))
+ '(package-selected-packages
+   (quote
+    (tern nodejs-repl livid-mode skewer-mode js2-refactor multiple-cursors js2-mode js-doc import-js grizzl helm-gtags ggtags dap-mode lsp-treemacs bui counsel-gtags counsel swiper add-node-modules-path web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data reveal-in-osx-finder pbcopy osx-trash osx-dictionary org-gcal request-deferred deferred launchctl lv transient auctex-latexmk org-ref pdf-tools key-chord ivy tablist helm-bibtex parsebib company-auctex biblio biblio-core auctex intero flycheck hlint-refactor hindent helm-hoogle haskell-snippets company-ghci company-ghc ghc haskell-mode company-cabal cmm-mode unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy evil-magit magit magit-popup git-commit ghub treepy graphql with-editor company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+ '(zetteldeft-id-format "%Y%m%d%H%M%S"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
