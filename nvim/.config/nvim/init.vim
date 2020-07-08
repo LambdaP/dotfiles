@@ -1,14 +1,19 @@
 scriptencoding utf-8
 
+let mapleader = "\<Space>"
+
 " Import and tweak plugins
 let $PLUGINS_VIM=expand('~/.config/nvim/plugins.vim')
 if filereadable($PLUGINS_VIM)
     source $PLUGINS_VIM
 endif
 
+" random sources:
+" https://www.chrisatmachine.com/Neovim/02-vim-general-settings/
+
 " Basic options ------------------------------------------------------- {{{
 
-set shell=/bin/sh   " Fish compatible
+set shell=/bin/sh   " Shell binary to use
 set title           " Change the terminal title
 set cursorline      " Highlight current line
 set textwidth=79    " Wrap at 79 columns
@@ -23,14 +28,11 @@ set number          " Show linenumbers
 set nowrap          " Turn off linewrap
 
 set expandtab       " Expand tabs to spaces
-
-" TODO: make this syntax-dependent.
-" hs   -> 2
-" C    -> 8?
-" rest -> 4
 set tabstop=2       " 2 spaces
 set shiftwidth=2    " 2 spaces
 set softtabstop=2   " 2 spaces
+
+set nojoinspaces    " Insert one space after punctuation when joining lines
 
 set ignorecase      " when searching
 set smartcase       " …unless I use an uppercase character
@@ -58,44 +60,42 @@ set wildignore+=*\\tmp\\*,*.swp,*.swo,*.zip,.git,.cabal-sandbox
 set wildmode=longest,list,full
 set completeopt+=longest
 
-" https://github.com/adobe-fonts/source-code-pro
-set guifont=Source\ Code\ Pro\ 14 " GUI font
-
 " Yell for long lines
 " TODO: revisit
 " au BufWinEnter * let w:m1=matchadd('ErrorMsg', '\%>80v.\+', -1)
 
 " Preview :s
-set inccommand=nosplit
+set inccommand=split
 
-" }}}
+" Colorscheme
 
-" Colorscheme ----------------------------------------------------------{{{
-
-colorscheme solarized
-
+set termguicolors
 set background=dark
+" colorscheme solarized
+colorscheme NeoSolarized
 
-let g:solarized_visibility      = 'high'
-let g:solarized_contrast        = 'high'
-let g:solarized_termcolors      = 16 " 16 if Solarized is the colorscheme
-                                     " of iTerm2, 256 otherwise
+" NeoSolarized: fix ugly coloring of matches in LaTeX
+highlight MatchParen ctermbg=bg guibg=bg
 
 " }}}
+"
+set noshowmode
+set showtabline=2                       " Always show tabs
 
 " Dumb osx ------------------------------------------------------------ {{{
 
-" TODO: can I remove the let?
-let s:uname = system('uname')
-if s:uname == 'Darwin\n'
-  set clipboard=unnamed   " TODO: what does this do exactly?
-endif
+" Make nvim clipboard compatible with OSX
+set clipboard=unnamed
 
 " }}}
 
 " Convenient Mapping--------------------------------------------------- {{{
 
-let mapleader=','
+" let mapleader=','
+" let mapleader = "\<Space>"
+
+" easy access . on AZERTY
+nnoremap ; .
 
 " disable Ex mode, format text instead
 map  Q gq
@@ -113,11 +113,11 @@ xmap > ]
 " Make regex sane
 noremap / /\v
 
-" un-highlight search results
-noremap <leader><space> :noh<cr>
+" treat dash separated words as a word text object"
+set iskeyword+=-
 
-" Shortcut to rapidly toggle `set list`
-nnoremap <leader>l :set list!<CR>
+" More space for displaying messages
+set cmdheight=2
 
 " Normal/Visual tab for bracket pairs
 nnoremap <tab> %
@@ -130,12 +130,14 @@ nnoremap <leader>v <C-w>v<C-w>l
 nnoremap <leader>w <C-w><C-w>
 
 "Moves around tabs
+" TODO: review
 nnoremap <leader>t <Esc>:tabnew<CR>
 
 "Real Returns
 nnoremap <leader>R :%s/\r/\r/g<CR>
 
 "Kill endline whitespaces
+" TODO: find better trick
 nnoremap <Leader><Return> :%s/\s\+$//e<CR>
 
 "Moving around windows
@@ -162,6 +164,10 @@ endfunc
 
 nnoremap <leader>n :call NumberToggle()<cr>
 " }}}
+
+" add thesauri
+
+set thesaurus+=$HOME/.config/thesaurus/mthesaur.txt
 
 " The following from: https://github.com/dense-analysis/ale
 "" Put these lines at the very end of your vimrc file.

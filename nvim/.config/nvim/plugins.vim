@@ -1,3 +1,4 @@
+scriptencoding utf-8
 " plugins.vim
 "
 " Neovim plugins and options
@@ -8,8 +9,6 @@ call plug#begin()
 
 " check this config:
 " https://github.com/hardcoreplayers/ThinkVim
-" https://github.com/bagrat/vim-buffet
-" https://github.com/liuchengxu/vim-clap
 
 " Univeral Text Linking - Execute URLs, footnotes, open emails, organize ideas
 Plug 'vim-scripts/utl.vim'
@@ -17,15 +16,25 @@ Plug 'vim-scripts/utl.vim'
 " Define a different filetype syntax on regions of a buffer.
 Plug 'vim-scripts/SyntaxRange'
 
+
+" tldr client for vim/neovim
+Plug 'wlemuel/vim-tldr'
+
+" emulate emacs narrow-region feature
+Plug 'chrisbra/NrrwRgn'
+
 " enable repeating supported plugin maps with "."
 Plug 'tpope/vim-repeat'
 
 " speeddating.vim: use CTRL-A/CTRL-X to increment dates, times, and more
 Plug 'tpope/vim-speeddating'
 
+" A Git wrapper so awesome, it should be illegal
+Plug 'tpope/vim-fugitive'
+
 " Load local vimrc files in the tree root dir up to current dir
 " Looks dangerous
-Plug 'embear/vim-localvimrc'
+" Plug 'embear/vim-localvimrc'
 
 " Start screen
 Plug 'mhinz/vim-startify'
@@ -49,7 +58,27 @@ Plug 'tpope/vim-abolish'
 " Plug 'tpope/vim-commentary'
 
 " My favorite colorscheme.
-Plug 'altercation/vim-colors-solarized'
+" Plug 'altercation/vim-colors-solarized' " -------------------------------{{{
+"
+" colorscheme solarized
+"
+" set background=dark
+"
+" let g:solarized_visibility      = 'high'
+" let g:solarized_contrast        = 'high'
+" let g:solarized_termcolors      = 16 " 16 if Solarized is the colorscheme
+"                                      " of iTerm2, 256 otherwise
+"
+" " }}}
+
+Plug 'iCyMind/NeoSolarized' " -------------------------------------------{{{
+" let g:neosolarized_contrast   = 'high'
+let g:neosolarized_visibility   = 'low'
+" let g:neosolarized_termBoldAsBright = 1
+" let g:neosolarized_bold       = 1
+" let g:neosolarized_underline  = 1
+" let g:neosolarized_italic     = 1
+" }}}
 
 " Thank you for flying neovim.
 Plug 'bling/vim-airline'
@@ -70,6 +99,9 @@ Plug 'dense-analysis/ale'
 " full language server protocol support as VSCode
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Use fzf instead of coc.nvim built-in fuzzy finder.
+Plug 'antoinemadec/coc-fzf'
+
 " Vim motions on speed
 Plug 'easymotion/vim-easymotion'
 
@@ -80,15 +112,55 @@ Plug 'mbbill/undotree'
 "     \ 'do': 'bash install.sh',
 "     \ }
 
-" Plug 'junegunn/fzf'
+" A command-line fuzzy finder
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim' " -----------------------------------------------{{{
+" Configuration inspired by
+" https://dev.to/iggredible/how-to-search-faster-in-vim-with-fzf-vim-36ko
+
+" TODO: change mappings
+" Use C-f to search in files
+" nnoremap <silent> <C-f>     :Files<CR>
+" Use Leader-f to search within buffer
+nnoremap <silent> <Leader>f :Rg<CR>
+
+set grepprg=rg\ --vimgrep\ --smart-case\ --follow
+
+" Suggested when installing FZF
+set runtimepath+=/usr/local/opt/fzf
+
+" }}}
+
+" Notational velocity for vim.
+Plug 'https://github.com/alok/notational-fzf-vim' " ---------------------{{{
+
+" TODO: curate
+" g:nv_search_paths needs to be set or the plugin yells
+let g:nv_search_paths = ['~/notes','~/wiki','./notes.md','./aux/notes.md']
+
+" consider mapping something to :NV
+" e.g.:nnoremap <silent> <c-s> :NV<CR>
+"
+" }}}
+
+" alternatives to fzf:
+" Plug 'liuchengxu/vim-clap'
+
+" Enhancing in-buffer search experience
+Plug 'junegunn/vim-slash'
+
+" see the contents of the registers
+Plug 'junegunn/vim-peekaboo'
 
 " Plug 'Shougo/echodoc.vim'
 
-" An efficient fuzzy finder that helps to locate files, buffers, mrus, gtags, etc. on the fly for both vim and neovim.
-"  Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+" Snippet engine
+" Plug 'SirVer/ultisnips'
+"
+" Plug 'honza/vim-snippets'
 
 " display the indention levels with thin vertical lines
-Plug 'Yggdroot/indentLine'
+" Plug 'Yggdroot/indentLine'
 
 " Rust syntax highlighting.
 Plug 'wting/rust.vim', { 'for': 'rust' }
@@ -96,7 +168,7 @@ Plug 'wting/rust.vim', { 'for': 'rust' }
 " Purescript syntax highlighting.
 Plug 'raichoo/purescript-vim', { 'for': 'purescript' }
 
-Plug 'jceb/vim-orgmode'
+Plug 'jceb/vim-orgmode', { 'for': 'org' }
 
 """ Haskell
 
@@ -113,22 +185,33 @@ Plug 'sdiehl/vim-ormolu', { 'for': 'haskell' }
 
 
 """ Latex
-"
+
 Plug 'lervag/vimtex', { 'for': ['tex', 'latex'] }
 " Plug 'rhysd/vim-grammarous', { 'for': ['tex', 'latex'] }
 " Plug 'dbmrq/vim-ditto', { 'for': ['tex', 'latex'] }
 " Plug 'reedes/vim-wordy', { 'for': ['tex', 'latex'] }
 
 " A version-control-friendly prose text formatter for vim (and neovim).
-Plug 'mrossinek/vim-verdict'
+Plug 'mrossinek/vim-verdict', { 'for': ['markdown'] }
 
 " TODO: look into those.
+" https://github.com/neovim/neovim/wiki/Related-projects
 " Plug 'vim-pandoc/vim-pandoc'
 " Plug 'vim-pandoc/vim-pandoc-syntax'
 " Plug 'mhinz/neovim-remote'
 " Plug 'euclio/vim-markdown-composer'
 " Plug 'airblade/vim-gitgutter'
 " https://github.com/chrisbra/NrrwRgn/
+" https://github.com/iamcco/markdown-preview.nvim
+" https://github.com/vimoutliner/vimoutliner/
+" https://vimawesome.com/plugin/vim-agriculture
+" https://github.com/liuchengxu/vim-clap
+" https://github.com/romainl/idiomatic-vimrc
+" Plug 'vimwiki/vimwiki'
+" https://github.com/jalvesaq/vimcmdline
+" Plug 'pechorin/any-jump.vim'
+" https://github.com/bagrat/vim-buffet
+" https://github.com/liuchengxu/vim-clap
 
 call plug#end()
 
@@ -137,11 +220,12 @@ call plug#end()
 " activate vim-verdict by default for these filetypes
 " TODO: consider using vim-plug for this
 augroup VerdictAuto
-  autocmd FileType tex      call verdict#Init()
+"  autocmd FileType tex      call verdict#Init() FIXME this is bad
   autocmd FileType markdown call verdict#Init()
 augroup END
 
 
+" TODO: review
 let g:ghcid_command = 'stack exec -- ghcid -c "stack ghci"'
 
 " do not replace latex sequences
@@ -533,55 +617,36 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings using CoCList:
+" nb: with leader=' ' this does not work
 " Show all diagnostics.
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+" nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" " Manage extensions.
+" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" " Show commands.
+" nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" " Find symbol of current document.
+" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" " Search workspace symbols.
+" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" " Do default action for next item.
+" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" " Do default action for previous item.
+" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" " Resume latest coc list.
+" nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
 
 """ END COC configuration
 
-" """ BEGIN LeaderF configuration
-" " don't show the help in normal mode
-" let g:Lf_HideHelp = 1
-" let g:Lf_UseCache = 0
-" let g:Lf_UseVersionControlTool = 0
-" let g:Lf_IgnoreCurrentBufferName = 1
-" " popup mode
-" let g:Lf_WindowPosition = 'popup'
-" let g:Lf_PreviewInPopup = 1
-" let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
-" let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
-"
-" let g:Lf_ShortcutF = "<leader>ff"
-" noremap <leader>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
-" noremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
-" noremap <leader>ft :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
-" noremap <leader>fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
-"
-" " noremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR>
-" " noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR>
-" " search visually selected text literally
-" xnoremap gf :<C-U><C-R>=printf("Leaderf! rg -F -e %s ", leaderf#Rg#visual())<CR>
-" noremap go :<C-U>Leaderf! rg --recall<CR>
-"
-" " should use `Leaderf gtags --update` first
-" let g:Lf_GtagsAutoGenerate = 0
-" let g:Lf_Gtagslabel = 'native-pygments'
-" noremap <leader>fr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
-" noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
-" noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
-" noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
-" noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
-" """ END LeaderF configuration
+""" BEGIN fzf configuration
+" references:
+" https://www.reddit.com/r/neovim/comments/djmehv/im_probably_really_late_to_the_party_but_fzf_in_a/
+let g:fzf_layout = { 'window': { 'width': 0.95, 'height': 0.85 } }
+
+" bindings
+" call fzf#vim#files('', fzf#vim#with_preview({'options': '--prompt ""'}, 'right:70%'))
+nnoremap <silent> <C-p> :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
+nnoremap <silent> <leader>b :Buffers<CR>
+autocmd! FileType fzf tnoremap <buffer> <esc> <c-c>
+""" END fzf configuration
