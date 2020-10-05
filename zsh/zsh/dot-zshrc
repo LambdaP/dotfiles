@@ -1,3 +1,21 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Set up XDG Base Directory Specification
+# https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+
+[ -z ${XDG_DATA_HOME+x}   ] && export XDG_DATA_HOME=$HOME/.local/share
+[ -z ${XDG_CONFIG_HOME+x} ] && export XDG_CONFIG_HOME=$HOME/.config
+[ -z ${XDG_CACHE_HOME+x}  ] && export XDG_CACHE_HOME=$HOME/.cache
+
+foreach dir ( $XDG_DATA_HOME $XDG_CONFIG_HOME $XDG_CACHE_HOME )
+  [ -d $dir ] && mkdir -p $dir
+end
+
 ## Helper functions
 
 function safe_source {
@@ -6,7 +24,7 @@ function safe_source {
 
 ## Set up zplug
 
-export ZPLUG_HOME=$HOME/.zplug
+export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
 # Install plugins if there are plugins that have not been installed
@@ -35,9 +53,8 @@ zplug load
 
 unsetopt hist_verify
 
-# Prompt: starship
-if command -v starship &>/dev/null; then
-  eval "$(starship init zsh)"
+if command -v timew &>/dev/null && [ -z ${TIMEWARRIORDB+x}  ]; then
+  export TIMEWARRIORDB=$XDG_DATA_HOME/timewarrior
 fi
 
 ## Configure zsh
@@ -47,13 +64,13 @@ DOTCONFIG=$HOME/.config
 # Source local configuration files
 safe_source "$DOTCONFIG/zsh/path.config"
 safe_source "$DOTCONFIG/zsh/alias.config"
-safe_source "$DOTCONFIG/zsh/zsh_mac.config"
+# safe_source "$DOTCONFIG/zsh/zsh_mac.config"
 
-# Use nvim as manpager `:h Man`
-if command -v nvim &>/dev/null; then
-  export MANPAGER="nvim +Man! -c ':set signcolumn=' -c ':set colorcolumn=""'"
-  export MANWIDTH=999
-fi
+# # Use nvim as manpager `:h Man`
+# if command -v nvim &>/dev/null; then
+#   export MANPAGER="nvim +Man! -c ':set signcolumn=' -c ':set colorcolumn=""'"
+#   export MANWIDTH=999
+# fi
 
 if command -v rg &>/dev/null; then
   # FZF confile
@@ -63,6 +80,7 @@ if command -v rg &>/dev/null; then
   export FZF_DEFAULT_OPTS='-m --height 50% --border'
 fi
 
+# Homebrew autocomplete
 if command -v brew &>/dev/null; then
   # If "zsh compinit: insecure directories" warnings, run:
   #   chmod go-w '/usr/local/share'
@@ -74,8 +92,26 @@ fi
 
 export CUPS_USER=plambein # to use printers @ INRIA
 
+# Base16 Shell
+# https://github.com/chriskempson/base16-shell
+BASE16_SHELL="$HOME/.config/base16-shell/"
+[ -n "$PS1" ] && \
+    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+        eval "$("$BASE16_SHELL/profile_helper.sh")"
+
 safe_source "/Users/p/Library/Preferences/org.dystroy.broot/launcher/bash/br"
 safe_source "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env"
 safe_source "~/.fzf.zsh"
 safe_source "/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-# safe_source "/usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+safe_source "/usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+safe_source "/usr/local/share/zsh-navigation-tools/zsh-navigation-tools.plugin.zsh"
+safe_source "/usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+safe_source "/usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme"
+
+# # Prompt: starship
+# if command -v starship &>/dev/null; then
+#   eval "$(starship init zsh)"
+# fi
+
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
