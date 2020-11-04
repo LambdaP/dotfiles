@@ -1,18 +1,16 @@
-#!/bin/sh
+#!/bin/zsh -f
 
-CURR_DIR=$(pwd)
+[ -z ${XDG_CONFIG_HOME+x} ] && XDG_CONFIG_HOME=$HOME/.config
 
-echo "Installing nvim."
+NVIMDOTDIR=$XDG_CONFIG_HOME/nvim
 
-if [ -e ~/.config/nvim ]
-then
-        mv ~/.config/nvim ~/.config/nvim.pre_script
-fi
+mkdir -p $NVIMDOTDIR
 
-mkdir -p ~/.config/nvim # Do not symlink ~/.config/nvim to dotfiles/nvim
-stow -v nvim --target=$HOME
+echo "Installing neovim."
 
-echo "Installing vim-plug for neovim."
+stow -v --target=$XDG_CONFIG_HOME/nvim neovim
+
+echo "Installing vim-plug."
 curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
