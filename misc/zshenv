@@ -1,0 +1,9 @@
+# should be /etc/zshenv
+
+if [ -x /usr/libexec/path_helper ]; then
+	eval `/usr/libexec/path_helper -s`
+fi
+
+if [ -d "$HOME/.config/zsh" ]; then
+  export ZDOTDIR=$HOME/.config/zsh
+fi
