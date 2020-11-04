@@ -19,3 +19,7 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 mkdir -p $XDG_DATA_HOME/man
 export MANPATH=$XDG_DATA_HOME/man:$MANPATH
+
+export PATH=$HOME/.local/bin:$PATH
+
+typeset -U path
