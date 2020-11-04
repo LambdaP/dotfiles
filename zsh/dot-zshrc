@@ -5,16 +5,13 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Set up XDG Base Directory Specification
-# https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+# https://github.com/zimfw/zimfw
+# https://github.com/belak/zsh-utils
+# http://strcat.de/zsh/#tipps
+# https://github.com/mika/zsh-pony
 
-[ -z ${XDG_DATA_HOME+x}   ] && export XDG_DATA_HOME=$HOME/.local/share
-[ -z ${XDG_CONFIG_HOME+x} ] && export XDG_CONFIG_HOME=$HOME/.config
-[ -z ${XDG_CACHE_HOME+x}  ] && export XDG_CACHE_HOME=$HOME/.cache
-
-foreach dir ( $XDG_DATA_HOME $XDG_CONFIG_HOME $XDG_CACHE_HOME )
-  [ -d $dir ] && mkdir -p $dir
-end
+# https://github.com/zdharma/zinit
+# https://github.com/zpm-zsh/zpm
 
 ## Helper functions
 
@@ -45,9 +42,6 @@ zplug "modules/directory",    from:prezto
 zplug "modules/spectrum",     from:prezto
 zplug "modules/utility",      from:prezto
 zplug "modules/completion",   from:prezto
-# zplug "modules/prompt",       from:prezto #, \
-			      # hook-build:"ln -sf $HOME/.config/zsh/prompt_elisa_setup $ZPLUG_HOME/repos/sorin-ionescu/prezto/modules/prompt/functions"
-            # FIXME: that hook fails, and the module does not get loaded.
 
 zplug load
 
@@ -59,18 +53,12 @@ fi
 
 ## Configure zsh
 
-DOTCONFIG=$HOME/.config
+# XDG Base Directory set in .zshenv
 
 # Source local configuration files
-safe_source "$DOTCONFIG/zsh/path.config"
-safe_source "$DOTCONFIG/zsh/alias.config"
+safe_source "$XDG_CONFIG_HOME/zsh/path.config"
+safe_source "$XDG_CONFIG_HOME/zsh/alias.config"
 # safe_source "$DOTCONFIG/zsh/zsh_mac.config"
-
-# # Use nvim as manpager `:h Man`
-# if command -v nvim &>/dev/null; then
-#   export MANPAGER="nvim +Man! -c ':set signcolumn=' -c ':set colorcolumn=""'"
-#   export MANWIDTH=999
-# fi
 
 if command -v rg &>/dev/null; then
   # FZF confile
@@ -86,9 +74,13 @@ if command -v brew &>/dev/null; then
   #   chmod go-w '/usr/local/share'
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 
-  autoload -Uz compinit
-  compinit
 fi
+
+autoload -Uz compinit
+compinit
+
+# goes after compinit
+kitty + complete setup zsh | source /dev/stdin
 
 export CUPS_USER=plambein # to use printers @ INRIA
 
@@ -115,3 +107,5 @@ safe_source "/usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme"
 
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+
+test -e "${ZDOTDIR}/.iterm2_shell_integration.zsh" && source "${ZDOTDIR}/.iterm2_shell_integration.zsh"

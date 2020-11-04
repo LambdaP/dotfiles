@@ -1,0 +1,21 @@
+# zshenv: always sourced, should contain exported variables
+#         that should be available to other programs.
+
+# Set up XDG Base Directory Specification
+# https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+
+[ -z ${XDG_DATA_HOME+x}   ] && export XDG_DATA_HOME=$HOME/.local/share
+[ -z ${XDG_CONFIG_HOME+x} ] && export XDG_CONFIG_HOME=$HOME/.config
+[ -z ${XDG_CACHE_HOME+x}  ] && export XDG_CACHE_HOME=$HOME/.cache
+
+foreach dir ( $XDG_DATA_HOME $XDG_CONFIG_HOME $XDG_CACHE_HOME )
+  [ -d $dir ] && mkdir -p $dir
+end
+
+export EDITOR='nvim'
+export VISUAL=$EDITOR
+export PAGER='less'
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+mkdir -p $XDG_DATA_HOME/man
+export MANPATH=$XDG_DATA_HOME/man:$MANPATH

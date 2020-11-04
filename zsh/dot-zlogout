@@ -6,6 +6,6 @@
 #
 
 # Print the message.
-cat <<-EOF
-
-EOF
+# cat <<-EOF
+#
+# EOF
