@@ -13,24 +13,16 @@
 ## Ensure ZSH config directory exists
 
 [ -z ${XDG_CONFIG_HOME+x} ] && XDG_CONFIG_HOME=$HOME/.config
-
-CONFIG_ZSH=$XDG_CONFIG_HOME/zsh
-
-mkdir -p $CONFIG_ZSH
+[ -z ${ZDOTDIR+x} ]         && ZDOTDIR=$XDG_CONFIG_HOME/zsh   && mkdir -p $ZDOTDIR
 
 DOTFILES=$(pwd)
 
-# Save previous .zshrc file
-# [ -e ~/.zshrc ] &&	mv ~/.zshrc ~/.zshrc.pre_script
-
 # Symlink zsh config files
 
-stow -v --target=$CONFIG_ZSH --dotfiles
+stow -v --target=$ZDOTDIR --dotfiles
 
 # stow -v zsh      --target=$HOME
 stow -v zsh      --target=$HOME --dir=$DOTFILES/local
-
-# stow -v starship --target=$HOME
 
 # install Zim
 curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
