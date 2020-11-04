@@ -1,5 +1,8 @@
+#!/bin/zsh -f
+
 # zshenv: always sourced, should contain exported variables
 #         that should be available to other programs.
+#         zshenv is sourced second, after /etc/zshenv
 
 # Set up XDG Base Directory Specification
 # https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html

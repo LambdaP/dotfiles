@@ -8,7 +8,7 @@ mkdir -p $NVIMDOTDIR
 
 echo "Installing neovim."
 
-stow -v --target=$XDG_CONFIG_HOME/nvim neovim
+stow -v neovim --no-folding --target=$NVIMDOTDIR
 
 echo "Installing vim-plug."
 curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \

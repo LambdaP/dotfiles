@@ -1,3 +1,9 @@
+#!/bin/zsh -f
+
+[ -z ${XDG_DATA_HOME+x}   ] && XDG_DATA_HOME=$HOME/.local/share
+[ -z ${XDG_CONFIG_HOME+x} ] && XDG_CONFIG_HOME=$HOME/.config
+[ -z ${XDG_CACHE_HOME+x}  ] && XDG_CACHE_HOME=$HOME/.cache
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -21,29 +27,28 @@ function safe_source {
 
 ## Set up zplug
 
-export ZPLUG_HOME=/usr/local/opt/zplug
-source $ZPLUG_HOME/init.zsh
+if command -v zplug &>/dev/null; then
+  # Install plugins if there are plugins that have not been installed
+  if ! zplug check --verbose; then
+      printf "Install? [y/N]: "
+      if read -q; then
+          echo; zplug install
+      fi
+  fi
 
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
+  # TODO: this is imported from the Prezto config files I used to use.
+  #       It would probably be a good idea to go through and see which one I like.
+  zplug "modules/environment",  from:prezto
+  zplug "modules/terminal",     from:prezto
+  zplug "modules/editor",       from:prezto
+  zplug "modules/history",      from:prezto
+  zplug "modules/directory",    from:prezto
+  zplug "modules/spectrum",     from:prezto
+  zplug "modules/utility",      from:prezto
+  zplug "modules/completion",   from:prezto
+
+  zplug load
 fi
-
-# TODO: this is imported from the Prezto config files I used to use.
-#       It would probably be a good idea to go through and see which one I like.
-zplug "modules/environment",  from:prezto
-zplug "modules/terminal",     from:prezto
-zplug "modules/editor",       from:prezto
-zplug "modules/history",      from:prezto
-zplug "modules/directory",    from:prezto
-zplug "modules/spectrum",     from:prezto
-zplug "modules/utility",      from:prezto
-zplug "modules/completion",   from:prezto
-
-zplug load
 
 unsetopt hist_verify
 
@@ -106,6 +111,11 @@ safe_source "/usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme"
 # fi
 
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
-[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+safe_source "${ZDOTDIR}/.p10k.zsh"
+# [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 
 test -e "${ZDOTDIR}/.iterm2_shell_integration.zsh" && source "${ZDOTDIR}/.iterm2_shell_integration.zsh"
+
+typeset -U path
+typeset -U manpath
+typeset -U fpath

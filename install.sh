@@ -1,6 +1,4 @@
-#!/bin/sh
-
-CURR_DIR=$(pwd)
+#!/bin/zsh -f
 
 [ -z ${XDG_CONFIG_HOME+x} ] && XDG_CONFIG_HOME=$HOME/.config
 
