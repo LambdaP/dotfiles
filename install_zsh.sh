@@ -1,4 +1,4 @@
-# #!/bin/sh
+#!/bin/zsh -f
 
 [ -z ${XDG_CONFIG_HOME+x} ] && XDG_CONFIG_HOME=$HOME/.config
 
