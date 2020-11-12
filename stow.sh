@@ -7,6 +7,7 @@
 stow -v kitty         --no-folding --target=$XDG_CONFIG_HOME
 stow -v powerlevel10k --no-folding --target=$XDG_CONFIG_HOME --dotfiles
 stow -v git           --no-folding --target=$XDG_CONFIG_HOME
+stow -v htop          --no-folding --target=$XDG_CONFIG_HOME
 
 stow -v editorconfig  --dotfiles --target=$HOME
 stow -v taskwarrior   --dotfiles --target=$HOME
