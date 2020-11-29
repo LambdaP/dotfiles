@@ -1,9 +1,18 @@
-# should be /etc/zshenv
+#!/bin/zsh -f
+#
+# The goal of this file is to be installed in /etc/zshenv.
+# Requires sudo.
+#     sudo cp -a /etc/zshenv /etc/zshenv-COPY-$(date +"%Y%m%d%H%M%S")
+#     sudo cp -f zshenv /etc/zshenv
+
+[ -z "${XDG_DATA_HOME+x}"   ] && export XDG_DATA_HOME="$HOME/.local/share"
+[ -z "${XDG_CONFIG_HOME+x}" ] && export XDG_CONFIG_HOME="$HOME/.config"
+[ -z "${XDG_CACHE_HOME+x}"  ] && export XDG_CACHE_HOME="$HOME/.cache"
 
 if [ -x /usr/libexec/path_helper ]; then
-	eval `/usr/libexec/path_helper -s`
+  eval "$(/usr/libexec/path_helper -s)"
 fi
 
 if [ -d "$HOME/.config/zsh" ]; then
-  export ZDOTDIR=$HOME/.config/zsh
+  export ZDOTDIR="$HOME/.config/zsh"
 fi
