@@ -25,7 +25,6 @@ scriptencoding utf-8
 " https://github.com/nvim-lua/telescope.nvim
 " https://github.com/nvim-lua/lsp-status.nvim
 " https://github.com/pianocomposer321/project-templates.nvim
-" https://github.com/wbthomason/packer.nvim
 " https://github.com/timeyyy/orchestra.nvim
 " https://github.com/brooth/far.vim
 " https://github.com/Floobits/floobits-neovim
@@ -316,7 +315,6 @@ Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
 " requires ormolu
 Plug 'sdiehl/vim-ormolu', { 'for': 'haskell' }
 
-
 """ Latex
 
 Plug 'lervag/vimtex'
@@ -351,7 +349,7 @@ Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'vimoutliner/vimoutliner'
 
 Plug 'isene/hyperlist.vim'
-Plug 'itchyny/calendar.vim'
+Plug 'https://github.com/itchyny/calendar.vim'
 
 " load last
 Plug 'ryanoasis/vim-devicons'
