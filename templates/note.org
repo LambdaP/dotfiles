@@ -1,0 +1,6 @@
+* {id}
+#+identifier: {id}
+#+version: 0.0.1
+#+title: {title}
+
+
