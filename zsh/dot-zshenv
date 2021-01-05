@@ -1,23 +1,9 @@
 #!/bin/zsh -f
 
-# zshenv: always sourced, should contain exported variables
-#         that should be available to other programs.
-#         zshenv is sourced second, after /etc/zshenv
-
-# Set up XDG Base Directory Specification
-# https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
-
-# [ -z "${XDG_DATA_HOME+x}"   ] && export XDG_DATA_HOME="$HOME/.local/share"
-# [ -z "${XDG_CONFIG_HOME+x}" ] && export XDG_CONFIG_HOME="$HOME/.config"
-# [ -z "${XDG_CACHE_HOME+x}"  ] && export XDG_CACHE_HOME="$HOME/.cache"
-
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CACHE_HOME="$HOME/.cache"
-
-foreach dir ( $XDG_DATA_HOME $XDG_CONFIG_HOME $XDG_CACHE_HOME )
-  [ -d $dir ] && mkdir -p $dir
-end
+# .zshenv
+#
+# assumptions: ZDOTDIR is set
+#              XDG Base Directory Specification is set
 
 export EDITOR="nvim"
 export VISUAL=$EDITOR
@@ -25,21 +11,19 @@ export VISUAL=$EDITOR
 export PAGER="less"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
-export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export HISTFILE="$ZDOTDIR/.zhistory"    # History filepath
 export HISTSIZE=10000                   # Maximum events for internal history
 export SAVEHIST=10000                   # Maximum events in history file
 
 [ -d "$XDG_DATA_HOME/man" ] && mkdir -p "$XDG_DATA_HOME/man"
 
-typeset -U MANPATH manpath
+# MANPATH="$XDG_DATA_HOME/man:$MANPATH"
 
-MANPATH="$XDG_DATA_HOME/man:$MANPATH"
-
-export MANPATH
-
-typeset -U PATH path
+manpath=("$XDG_DATA_HOME/man" "$manpath[@]")
 
 path=("$HOME/.local/bin" "/usr/local/sbin" "/usr/local/bin" "$path[@]")
 
+typeset -U path cdpath fpath manpath
+
 export PATH
+export MANPATH

@@ -1,158 +1,67 @@
 #!/bin/zsh -f
 
-# [ -z ${XDG_DATA_HOME+x}   ] && XDG_DATA_HOME=$HOME/.local/share
-# [ -z ${XDG_CONFIG_HOME+x} ] && XDG_CONFIG_HOME=$HOME/.config
-# [ -z ${XDG_CACHE_HOME+x}  ] && XDG_CACHE_HOME=$HOME/.cache
+# .zshrc
+#
+# Useful references:
+#   - http://zsh.sourceforge.net/Contrib/startup/std/zshrc
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+umask 077 # Permissions default to user only
 
-# https://github.com/zimfw/zimfw
-# https://github.com/belak/zsh-utils
-# http://strcat.de/zsh/#tipps
-# https://github.com/mika/zsh-pony
+# # Use hard limits, except for a smaller stack and no core dumps
+# unlimit
+# limit stack 8192
+# limit core 0
+# limit -s
 
-# https://github.com/zdharma/zinit
-# https://github.com/zpm-zsh/zpm
-
-## Helper functions
-
-function safe_source {
-  [ -f "$1" ] && source "$1"
-}
-
-## Set up zplug
-
-# export ZPLUG_HOME="$XDG_CONFIG_HOME/zplug"
-
-# source $ZPLUG_HOME/init.zsh
-
-# if command -v zplug &>/dev/null; then
-#   # Install plugins if there are plugins that have not been installed
-#   if ! zplug check --verbose; then
-#       printf "Install? [y/N]: "
-#       if read -rq; then
-#           echo; zplug install
-#       fi
-#   fi
-
-#   # TODO: this is imported from the Prezto config files I used to use.
-#   #       It would probably be a good idea to go through and see which one I like.
-#   zplug "modules/environment",  from:prezto
-#   zplug "modules/terminal",     from:prezto
-#   zplug "modules/editor",       from:prezto
-#   zplug "modules/history",      from:prezto
-#   zplug "modules/directory",    from:prezto
-#   zplug "modules/spectrum",     from:prezto
-#   zplug "modules/utility",      from:prezto
-#   zplug "modules/completion",   from:prezto
-
-#   # https://github.com/psprint/zsh-navigation-tools
-
-#   zplug load
-# fi
-
-unsetopt hist_verify
-
-# if command -v timew &>/dev/null && [ -z ${TIMEWARRIORDB+x}  ]; then
-#   export TIMEWARRIORDB=$XDG_DATA_HOME/timewarrior
-# fi
-
-## Configure zsh
-
-# XDG Base Directory set in .zshenv
-
-# Source local configuration files
-safe_source "$XDG_CONFIG_HOME/zsh/path.config"
-safe_source "$XDG_CONFIG_HOME/zsh/alias.config"
-# safe_source "$DOTCONFIG/zsh/zsh_mac.config"
-
-# if command -v rg &>/dev/null; then
-#   # FZF confile
-#   # stolen here: https://dev.to/iggredible/how-to-search-faster-in-vim-with-fzf-vim-36ko
-
-#   export FZF_DEFAULT_COMMAND='rg --files'
-#   export FZF_DEFAULT_OPTS='-m --height 50% --border'
-# fi
-
-# Homebrew autocomplete
-# taken from https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
-
+# !! see: https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
 if command -v brew &>/dev/null; then
-
   # !! in case of warnings "zsh compinit: insecure directories", run:
   #
-  #   $ chmod -R go-w "$(brew --prefix)/share"
+  #   $ chmod -R go-w "$(brew --prefix)/share/zsh"
 
-  [[ -w "$(brew --prefix)/share" ]] && chmod -R go-w "$(brew --prefix)/share"
+  BREW_PREFIX='/usr/local'
+  BREW_SHARE="$BREW_PREFIX/share"
 
-  # !! [2020-11-28] The following is no longer advised.
-  #                 I don't know why.
-  # FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+  # !! Only makes sense if zsh-completions is installed via Homebrew
+  [[ -d "$BREW_SHARE/zsh-completions" ]] &&
+    fpath=( "$BREW_SHARE/zsh-completions" "$fpath[@]" )
 
-  FPATH="$(brew --prefix)/share/zsh/site-functions:$FPATH"
-  # export PATH="/usr/local/sbin:$PATH"
-
-  # GNU utils in the path
-
-  # HOMEBREW_PREFIX=$(brew --prefix)
-  #
-  # # gnubin
-  # for d in ${HOMEBREW_PREFIX}/opt/*/libexec/gnubin; do export PATH=$d:$PATH; done
-  # # gnuman
-  # for d in ${HOMEBREW_PREFIX}/opt/*/libexec/gnuman; do export MANPATH=$d:$MANPATH; done
+  fpath=( "$BREW_SHARE/zsh/site-functions" "$fpath[@]" )
 fi
 
 autoload -Uz compinit
 compinit
 
-if kitty -v rg &>/dev/null; then
-  # goes after compinit
+if [[ $TERM =~ 'kitty' ]]; then
+  # !! goes after compinit
   kitty + complete setup zsh | source /dev/stdin
 fi
 
-# export CUPS_USER=plambein # to use printers @ INRIA
+typeset -U path cdpath fpath manpath
 
-# source "$HOME/.config/zsh/api_tokens.sh"
-#
-setopt HIST_SAVE_NO_DUPS    # Do not write a duplicate event to the history file.
-setopt AUTO_PUSHD           # Push the current directory visited on the stack.
-setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
-setopt PUSHD_SILENT         # Do not print the directory stack after pushd or popd.
+setopt hist_save_no_dups    # Do not write a duplicate event to the history file.
+setopt auto_pushd           # Push the current directory visited on the stack.
+setopt pushd_ignore_dups    # Do not store duplicates in the stack.
+setopt pushd_silent         # Do not print the directory stack after pushd or popd.
 
-# Base16 Shell
-# https://github.com/chriskempson/base16-shell
-BASE16_SHELL="$HOME/.config/base16-shell/"
-[ -n "$PS1" ] && \
-    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-        eval "$("$BASE16_SHELL/profile_helper.sh")"
+unsetopt hist_verify
 
-safe_source "/Users/p/Library/Preferences/org.dystroy.broot/launcher/bash/br"
+bindkey -e                 # emacs key bindings
+bindkey ' ' magic-space    # also do history expansion on space
+bindkey '^I' complete-word # complete on tab, leave expansion to _expand
 
-# safe_source "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env"
-# safe_source "$HOME/.fzf.zsh"
-
-# safe_source "/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-# safe_source "/usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-# safe_source "/usr/local/share/zsh-navigation-tools/zsh-navigation-tools.plugin.zsh"
-# safe_source "/usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
-
-safe_source "/usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme"
-
-# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
-safe_source "${ZDOTDIR}/.p10k.zsh"
-
-# [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
-
-# TODO: add test for iterm2
-# test -e "${ZDOTDIR}/.iterm2_shell_integration.zsh" && source "${ZDOTDIR}/.iterm2_shell_integration.zsh"
-
-typeset -U path
-typeset -U manpath
-typeset -U fpath
+# Aliases
 
 alias vi=nvim
+
+# Zsh plugins installed via Homebrew
+
+foreach plugin_name (
+  "$BREW_SHARE/zsh-autosuggestions/zsh-autosuggestions.zsh"          \
+  "$BREW_SHARE/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"  \
+  "$BREW_SHARE/zsh-navigation-tools/zsh-navigation-tools.plugin.zsh" \
+  "$BREW_SHARE/zsh-history-substring-search/zsh-history-substring-search.zsh"
+)
+  [ -f $plugin_name ] &&
+    source "$plugin_name"
+end
