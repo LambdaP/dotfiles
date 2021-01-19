@@ -2,8 +2,9 @@
 
 # .zshenv
 #
-# assumptions: ZDOTDIR is set
-#              XDG Base Directory Specification is set
+# assumptions:
+#  - ZDOTDIR is set
+#  - Base Directory Specification is set
 
 export EDITOR="nvim"
 export VISUAL=$EDITOR
@@ -11,19 +12,11 @@ export VISUAL=$EDITOR
 export PAGER="less"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
-export HISTFILE="$ZDOTDIR/.zhistory"    # History filepath
-export HISTSIZE=10000                   # Maximum events for internal history
-export SAVEHIST=10000                   # Maximum events in history file
+export HISTFILE="${XDG_DATA_HOME-=$HOME/.local/share}/zsh/zsh_history"
+export HISTSIZE=10000 # Maximum events for internal history
+export SAVEHIST=10000 # Maximum events in history file
 
 [ -d "$XDG_DATA_HOME/man" ] && mkdir -p "$XDG_DATA_HOME/man"
 
-# MANPATH="$XDG_DATA_HOME/man:$MANPATH"
-
-manpath=("$XDG_DATA_HOME/man" "$manpath[@]")
-
-path=("$HOME/.local/bin" "/usr/local/sbin" "/usr/local/bin" "$path[@]")
-
-typeset -U path cdpath fpath manpath
-
-export PATH
-export MANPATH
+export MANPATH="$XDG_DATA_HOME/man:$MANPATH"
+export PATH="$XDG_CONFIG_HOME/emacs/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:$PATH"
