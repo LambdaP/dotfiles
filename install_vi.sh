@@ -9,9 +9,3 @@ mkdir -p $NVIMDOTDIR
 echo "Installing neovim."
 
 stow -v neovim --no-folding --target=$NVIMDOTDIR
-
-git clone https://github.com/wbthomason/packer.nvim\
- ~/.local/share/nvim/site/pack/packer/opt/packer.nvim
-
-echo "Installing plugins."
-nvim +PlugInstall

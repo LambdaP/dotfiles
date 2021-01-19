@@ -2,8 +2,8 @@
 
 set -e
 
-cp -a "$HOME/.zshenv" "$HOME/.zshenv-COPY-$(date +"%Y%m%d%H%M%S")"
-rm -f "$HOME/.zshenv"
+cp -a "$HOME/.zshenv" "$HOME/.zshenv-COPY-$(date +"%Y%m%d%H%M%S")" &&
+  rm -f "$HOME/.zshenv"
 
 stow -v zshenv --dotfiles --target="$HOME"
 
