@@ -1,11 +1,7 @@
-#
-# Executes commands at logout.
-#
-# Authors:
-#   Sorin Ionescu <sorin.ionescu@gmail.com>
-#
+#!/bin/zsh -f
 
-# Print the message.
-# cat <<-EOF
-#
-# EOF
+# .zlogout
+
+cat <<-EOF
+See you, space cowboy!
+EOF
