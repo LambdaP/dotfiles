@@ -48,7 +48,8 @@ if [[ $TERM =~ 'kitty' ]]; then
   # !! goes after compinit
   kitty + complete setup zsh | source /dev/stdin
 
-  alias ssh="kitty +kitten ssh"
+  alias ssh="TERM='xterm-256color' ssh"
+
 fi
 
 typeset -U path cdpath fpath manpath
@@ -79,3 +80,14 @@ foreach plugin_name (
   [ -f $plugin_name ] &&
     source "$plugin_name"
 end
+
+export GHCUP_USE_XDG_DIRS=yes
+source "$XDG_DATA_HOME/ghcup/env"
+
+[ -f "/Users/p/.local/share/ghcup/env" ] && source "/Users/p/.local/share/ghcup/env" # ghcup-env
+
+export PATH="/usr/local/opt/texinfo/bin:$PATH" # [2021-02-16]
+export PATH="/usr/local/opt/bison/bin:$PATH"   # [2021-02-16]
+
+[ command -v zoxide &>/dev/null ] &&
+  eval "$(zoxide init zsh)" # [2021-02-18]
