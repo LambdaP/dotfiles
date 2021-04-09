@@ -74,7 +74,6 @@ let &lazyredraw = 1
 let &scrolloff  = 3
 " set backspace = indent,eol,start " nvim default
 
-let &wrap           = 0
 let &number         = 1
 let &relativenumber = 1 " turn on after number
 
@@ -102,15 +101,28 @@ noremap / /\v
 
 " stolen from fzf.vim
 " set grepprg=rg\ --vimgrep\ --smart-case\ --follow
-let &grepprg = "rg --vimgrep --smart-case --follow"
+let &grepprg = 'rg --vimgrep --smart-case --follow'
 
 let &textwidth = 79
 
+let &wrap        = 1
+let &sidescroll  = 5
+" set listchars+=precedes:<,extends:>
+set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:· " curtesy of -romainl-
+let &linebreak   = 1
+let &breakindent = 1
+set breakindentopt=shift:4,min:20
+let &showbreak   = '… ' " TODO: do something fancy here.
+
+
 " ### tabs and spaces
 
-let &expandtab  = 1
-let &tabstop    = 2
+" let &expandtab  = 1
+
 let &shiftwidth = 0
+let &tabstop    = 2
+let &smarttab = 1
+" let &shiftwidth = 2
 let &shiftround = 1
 " set softtabstop=2
 
@@ -120,15 +132,22 @@ let &joinspaces = 0
 
 " set wildmenu " nvim default
 " set wildmode=longest,list,full
-let &wildmode    = "longest" . ",list" . ",full"
+let &wildmode    = 'longest' . ',list' . ',full'
 " set completeopt=menuone,noinsert,noselect
-let &completeopt = "menuone" . ",noinsert" . ",noselect"
+let &completeopt = 'menuone' . ',noinsert' . ',noselect'
+
+let &switchbuf   = 'usetab' . ',vsplit'
+
+" :botright cwindow
 
 " colorscheme
 
 let &termguicolors = 1
 " colorscheme base16-tomorrow-night
-colorscheme apprentice
+" colorscheme apprentice
+
+" lua require('colorscheme').setup('tomorow-night')
+lua require('colorscheme').setup('gruvbox-dark-soft')
 
 " ## Mappings
 
@@ -140,13 +159,37 @@ nnoremap   <TAB> :bnext<CR>
 nnoremap <S-TAB> :bprevious<CR>
 
 " ### AZERTY
-nnoremap ; .
+" nnoremap ; .
 
 " ## Mappings
 
 nnoremap g?  gc
 vnoremap g?  gc
 nnoremap g?? gcc
+
+nnoremap h m
+vnoremap h m
+nnoremap j h
+vnoremap j h
+nnoremap k j
+vnoremap k j
+nnoremap l k
+vnoremap l k
+nnoremap m l
+vnoremap m l
+
+" noremap h m
+" noremap j h
+" noremap k j
+" noremap l k
+" noremap m l
+
+" https://github.com/hrsh7th/nvim-compe
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 
 " https://gist.github.com/romainl/3b8cdc6c3748a363da07b1a625cfc666
 function! BreakHere()
@@ -155,5 +198,8 @@ function! BreakHere()
 endfunction
 
 nnoremap <Leader>K :<C-u>call BreakHere()<Return>
+
+" tmp to play with dotoo
+" autocmd BufNewFile,BufRead *.org setfiletype dotoo
 
 helptags $VIMRUNTIME/doc

@@ -11,4 +11,8 @@ require'nvim-treesitter.configs'.setup {
       node_decremental  = "grm" ,
     } ,
   } ,
+	refactor = {
+		highlight_definitions = { enable = true }   ,
+		highlight_current_scope = { enable = true } ,
+	}
 }

@@ -38,3 +38,7 @@ let g:vimtex_complete_bib = {'simple': 1, 'menu_fmt': "'@author_short. “@title
 let g:vimtex_quickfix_mode = 2
 let g:vimtex_quickfix_autoclose_after_keystrokes = 3
 " let g:vimtex_quickfix_open_on_warning = 0
+"
+" let g:vimtex_delim_insert_timeout = 20 " default 60
+" alternatively: https://github.com/andymass/vim-matchup
+"   (advised by vimtex)
