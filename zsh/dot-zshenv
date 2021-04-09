@@ -19,4 +19,4 @@ export SAVEHIST=10000 # Maximum events in history file
 [ -d "$XDG_DATA_HOME/man" ] && mkdir -p "$XDG_DATA_HOME/man"
 
 export MANPATH="$XDG_DATA_HOME/man:$MANPATH"
-export PATH="$XDG_CONFIG_HOME/emacs/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:$PATH"
+export PATH="/usr/local/lib/ruby/gems/3.0.0/bin:$HOME/.cargo/bin:$XDG_CONFIG_HOME/emacs/bin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:$PATH"

@@ -4,10 +4,10 @@
 
 ## Configuration files
 
-stow -v kitty         --no-folding --target=$XDG_CONFIG_HOME
-stow -v powerlevel10k --no-folding --target=$XDG_CONFIG_HOME --dotfiles
-stow -v git           --no-folding --target=$XDG_CONFIG_HOME
-stow -v htop          --no-folding --target=$XDG_CONFIG_HOME
+stow -v --no-folding --target=$XDG_CONFIG_HOME kitty
+stow -v --no-folding --target=$XDG_CONFIG_HOME git
+stow -v --no-folding --target=$XDG_CONFIG_HOME htop
+stow -v --no-folding --target=$XDG_CONFIG_HOME latexmk
 
 stow -v editorconfig  --dotfiles --target=$HOME
 # stow -v taskwarrior   --dotfiles --target=$HOME
