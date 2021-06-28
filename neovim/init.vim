@@ -10,37 +10,31 @@ scriptencoding utf-8
 
 " install packer if not present
 
-lua << EOF
+const s:packer_path = stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 
-local execute = vim.api.nvim_command
-local fn      = vim.fn
+if empty(glob(s:packer_path))
+	const s:packer_url = "https://github.com/wbthomason/packer.nvim"
+	call system(join(["git clone", s:packer_url, s:packer_path]))
+	packadd packer.nvim
+	lua require("p.plugins")
+	PackerCompile
+endif
 
-local install_path = fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
+const s:plugins = globpath(stdpath("config"), "lua/p/plugins.lua")
 
-if fn.empty(fn.glob(install_path)) > 0 then
-  execute(
-    '!git clone https://github.com/wbthomason/packer.nvim'
-      .. ' '
-      .. install_path
-  )
-  execute( 'packadd packer.nvim' )
-end
-
-EOF
-
-let $PACKER_CONFIG = expand('~/.config/nvim/lua/packer_config.lua')
-command! ReloadPlugins luafile $PACKER_CONFIG
+command! ReloadPlugins luafile `=s:plugins`
 
 augroup packer
-  autocmd!
-  autocmd BufRead      $PACKER_CONFIG ++once lua require('packer_config')
-  autocmd BufWritePost $PACKER_CONFIG PackerCompile
+	autocmd!
+	" autocmd BufEnter     s:packconf ++once lua require [[p.plugins]]
+	autocmd BufEnter     s:plugins ++once ReloadPlugins
+	autocmd BufWritePost s:plugins PackerCompile | ReloadPlugins
 augroup END
 
 " ## Options
 
-let mapleader      = "\<Space>"
-let maplocalleader = ','
+let mapleader      = ','
+let maplocalleader = "\<Space>"
 
 " TODO [2020-11-05] organize
 
@@ -49,7 +43,7 @@ syntax enable
 
 let g:vimsyn_embed = 'lPr'
 
-let &synmaxcol = 120
+let &synmaxcol = 180
 
 " set autoindent " nvim default
 let &smartindent = 1
@@ -109,6 +103,7 @@ let &wrap        = 1
 let &sidescroll  = 5
 " set listchars+=precedes:<,extends:>
 set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:· " curtesy of -romainl-
+set list
 let &linebreak   = 1
 let &breakindent = 1
 set breakindentopt=shift:4,min:20
@@ -146,8 +141,7 @@ let &termguicolors = 1
 " colorscheme base16-tomorrow-night
 " colorscheme apprentice
 
-" lua require('colorscheme').setup('tomorow-night')
-lua require('colorscheme').setup('gruvbox-dark-soft')
+colorscheme base16-gruvbox-dark-hard
 
 " ## Mappings
 
@@ -185,11 +179,11 @@ vnoremap m l
 " noremap m l
 
 " https://github.com/hrsh7th/nvim-compe
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+" inoremap <silent><expr> <C-Space> compe#complete()
+" inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+" inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+" inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+" inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 
 " https://gist.github.com/romainl/3b8cdc6c3748a363da07b1a625cfc666
 function! BreakHere()

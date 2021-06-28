@@ -14,12 +14,12 @@
 --
 ]]--
 
-vim.cmd('packadd packer.nvim')
+-- vim.cmd('packadd packer.nvim')
 
 return require('packer').startup(
-  function()
+  function(use)
     -- go manage yourself
-    use { 'wbthomason/packer.nvim', opt = true }
+    use { 'wbthomason/packer.nvim' }
 
     -- ## Experimental Neovim tech
 
@@ -29,23 +29,63 @@ return require('packer').startup(
 
     -- ### LSP
 
-    use {
-      {
-        'neovim/nvim-lspconfig'              ,
-        config = [[ require("lspconfig") ]]  ,
-        -- disable = true
-      } , {
-        'nvim-lua/lsp-status.nvim'           ,
-        config = [[ require("lsp-status") ]] ,
-        -- disable = true
-      }
-			, {
+		use {
+			{
+				'neovim/nvim-lspconfig',
+				-- config = [[ require("lspconfig") ]]  ,
+				config = function()
+						local lspc = require("lspconfig")
+						lspc.ccls.setup{}
+						lspc.hls.setup{}
+						lspc.gopls.setup{}
+						lspc.vimls.setup{}
+						lspc.bashls.setup{}
+						lspc.texlab.setup{
+							filetypes = { "tex", "bib" },
+							settings = {
+								latex = {
+									rootDirectory = ".",
+									build = { onSave = false },
+									lint = {
+										onChange = false,
+										onSave = false
+									}
+								}
+							}
+						}
+					end
+					-- disable = true
+				} , {
+					'nvim-lua/lsp-status.nvim',
+					config = [[ require("lsp-status") ]] ,
+					-- disable = true
+				} , {
+				'kabouzeid/nvim-lspinstall',
+				config = function()
+					local function setup_servers()
+						require'lspinstall'.setup()
+						local servers = require'lspinstall'.installed_servers()
+						for _, server in pairs(servers) do
+							require'lspconfig'[server].setup{}
+						end
+					end
+
+					setup_servers()
+
+					-- Automatically reload after `:LspInstall <server>`
+					--   so we don't have to restart neovim
+					require'lspinstall'.post_install_hook = function ()
+						setup_servers()    -- reload installed servers
+						vim.cmd("bufdo e") -- trigger FileType autocmd that starts the server
+					end
+				end
+			} , {
         'nvim-lua/completion-nvim'           ,
         config = [[ require("completion") ]] ,
-        -- disable = true
+        disable = true
       }
 			, {
-			  'hrsh7th/nvim-compe' ,
+			  'hrsh7th/nvim-compe',
 				config = function()
 					require'compe'.setup {
 						enabled = true;
@@ -63,7 +103,7 @@ return require('packer').startup(
 
 						source = {
 							path = true;
-							buffer = true;
+							buffer = false;
 							calc = true;
 							nvim_lsp = true;
 							nvim_lua = true;
@@ -78,24 +118,24 @@ return require('packer').startup(
 
 		use {
 			{
-				'nvim-treesitter/nvim-treesitter'    ,
+				'nvim-treesitter/nvim-treesitter',
 				config = [[ require("treesitter") ]] ,
 				event  = 'VimEnter *'                ,
 				-- disable = true
 			} ,
 			{
-				'nvim-treesitter/completion-treesitter' ,
+				'nvim-treesitter/completion-treesitter',
 				opt = true ,
 				-- disable = true
 			} ,
-			{ 'nvim-treesitter/playground' ,
+			{ 'nvim-treesitter/playground',
 				opt = true
 			} , {
 				'romgrk/nvim-treesitter-context' ,
 				after = 'nvim-treesitter'        ,
 				-- disable = true
 			} , {
-				'nvim-treesitter/nvim-treesitter-refactor' ,
+				'nvim-treesitter/nvim-treesitter-refactor',
 				opt = true
 			}
 		}
@@ -110,7 +150,7 @@ return require('packer').startup(
     ---- ### fuzzy magic
 
     use {
-      'nvim-telescope/telescope.nvim' ,
+      'nvim-telescope/telescope.nvim',
       requires = {
         'nvim-lua/popup.nvim'   ,
         'nvim-lua/plenary.nvim' ,
@@ -125,6 +165,7 @@ return require('packer').startup(
     -- ## Languages
 
     use { 'vmchale/dhall-vim' }
+		use { 'justinmk/vim-syntax-extra' }
 
     -- ### Lua
 
@@ -146,6 +187,7 @@ return require('packer').startup(
     use { 'wellle/targets.vim'              }
     use { 'michaeljsmith/vim-indent-object' }
     use { 'chaoren/vim-wordmotion'          }
+		use { 'phaazon/hop.nvim' }
     use { 'unblevable/quick-scope'          }
     use { 'justinmk/vim-sneak' ,
       config = function()
@@ -182,6 +224,7 @@ return require('packer').startup(
     -- use { 'dhruvasagar/vim-dotoo' }
 
     use { 'lervag/wiki.vim', 'lervag/wiki-ft.vim' }
+		use { 'lervag/lists.vim' }
 
     -- use { 'jceb/vim-orgmode' , ft = 'org' }
     -- use { 'aaronbieber/vim-quicktask'     }
@@ -201,7 +244,7 @@ return require('packer').startup(
     use { 'tommcdo/vim-lion'                 }
     use { 'tpope/vim-sleuth' ,
       config = function() vim.g.sleuth_automatic = 0 end
-  }
+		}
     -- use { 'justinmk/vim-dirvish'          }
     use { 'junegunn/vim-peekaboo'            }
     use { 'chrisbra/NrrwRgn'                 }
@@ -223,6 +266,12 @@ return require('packer').startup(
 				vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
 			}
 		}
+		use { 'folke/which-key.nvim',
+			config = function()
+				require("which-key").setup{}
+			end
+		}
+		use { 'Pocco81/TrueZen.nvim' }
 
     use {
       'tpope/vim-fugitive' ,
@@ -264,4 +313,3 @@ return require('packer').startup(
     -- 'tpope/vim-obsession'
   end
 )
-

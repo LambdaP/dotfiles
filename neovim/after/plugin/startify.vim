@@ -50,9 +50,11 @@ autocmd User Startified setlocal cursorline
 
 let g:startify_fortune_use_unicode = 1
 
+const s:plugins = globpath(stdpath("config"), "lua/p/plugins.lua")
+
 let g:startify_bookmarks = [
-      \ { 'c': '$MYVIMRC'       },
-      \ { 'p': '$PACKER_CONFIG' },
+      \ { 'c': '$MYVIMRC' },
+      \ { 'p': s:plugins },
       \ ]
 
 let g:startify_files_number   = 5
